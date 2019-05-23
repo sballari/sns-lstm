@@ -8,6 +8,7 @@ import random
 import logging
 import numpy as np
 import tensorflow as tf
+from multiprocessing import Pool
 
 
 class DataLoader:
@@ -20,38 +21,37 @@ class DataLoader:
         self,
         data_path,
         datasets,
-        navigation_maps,
-        semantic_maps,
-        semantic_mapping,
-        homography,
-        num_labels=6,
+        trajectory_size=20,
         delimiter="\t",
         skip=1,
-        max_num_ped=100,
-        trajectory_size=20,
+        navigation_maps=None,
+        navigation_mapping=None,
         neighborood_size=2,
-        batch_size=10,
+        semantic_maps=None,
+        semantic_mapping=None,
+        homography=None,
+        num_labels=6,
     ):
         """Constructor of the DataLoader class.
 
         Args:
           data_path: string. Path to the folder containing the datasets
           datasets: list. List of datasets to use.
-          navigation_maps: list. List of the navigation map.
-          semantic_maps: list. List of the semantic map.
-          semantic_mapping: list. Mapping between semantic_maps and datasets.
-          num_labels: int. Number of labels inside the semantic map.
-          homography: list. List of homography matrix.
+          trajectories_size: int. Length of the trajectory (obs_length +
+            pred_len).
           delimiter: string. Delimiter used to separate data inside the
             datasets.
           skip: int or True. If True, the number of frames to skip while making
             the dataset is random. If int, number of frames to skip while making
             the dataset
-          max_num_ped: int. Maximum number of pedestrian in a single frame.
-          trajectories_size: int. Length of the trajectory (obs_length +
-            pred_len).
+          navigation_maps: list. List of the navigation map.
+          navigation_mapping: list. Mapping between navigation_maps and
+            datasets.
           neighborood_size: int. Neighborhood size.
-          batch_size: int. Batch size.
+          semantic_maps: list. List of the semantic map.
+          semantic_mapping: list. Mapping between semantic_maps and datasets.
+          homography: list. List of homography matrix.
+          num_labels: int. Number of labels inside the semantic map.
 
         """
         # Store the list of datasets to load
@@ -62,83 +62,36 @@ class DataLoader:
             )
         )
 
-        # Store the list of the navigation map
-        self.__navigation = [
-            os.path.join(data_path, navigation) for navigation in navigation_maps
-        ]
-        # Store the list of the semantic map
-        self.__semantic = [
-            os.path.join(data_path, semantic) for semantic in semantic_maps
-        ]
-        # Store the list of the homography matrix
-        self.__homography = [os.path.join(data_path, hg) for hg in homography]
-
-        # Store the batch_size, trajectory_size, the maximum number of
-        # pedestrian in a single frame and skip value
-        self.batch_size = batch_size
+        # Store trajectory_size, the skip value and the delimiter
         self.trajectory_size = trajectory_size
-        self.max_num_ped = max_num_ped
         self.skip = skip
-        self.neighborood_size = neighborood_size
-        self.num_labels = num_labels
 
         if delimiter == "tab":
             delimiter = "\t"
         elif delimiter == "space":
             delimiter = " "
 
+        # If not None, store the list of the navigation maps and the neighborood
+        # size
+        if navigation_maps:
+            self.__navigation = [
+                os.path.join(data_path, navigation) for navigation in navigation_maps
+            ]
+            self.neighborood_size = neighborood_size
+
+        # If not None, store the list of the semantic maps, homography and the
+        # number of labels
+        if semantic_maps:
+            self.__semantic = [
+                os.path.join(data_path, semantic) for semantic in semantic_maps
+            ]
+            self.__homography = [os.path.join(data_path, hg) for hg in homography]
+            self.num_labels = num_labels
+
         # Load the datasets and preprocess them
-        self.__load_data(delimiter, semantic_mapping)
+        self.__load_data(delimiter, navigation_mapping, semantic_mapping)
         self.__preprocess_data()
         self.__type_and_shape()
-
-    def next_batch(self):
-        """Generator method that returns an iterator pointing to the next batch.
-
-        Returns:
-          Generator object that has a list of trajectory sequences of size
-            batch_size, a list of relative trajectory sequences of size
-            batch_size, a list containing the mask for the grid layer of size
-            batch_size, a list with the number of pedestrian in each sequence, a
-            list containing the mask for the loss function, a list containing
-            the navigation map, the top_left coordinates for each dataset and a
-            list containing the semantic maps.
-
-        """
-        it = self.next_sequence()
-        for batch in range(self.num_batches):
-            batch = []
-            batch_rel = []
-            mask_batch = []
-            peds_batch = []
-            loss_batch = []
-            navigation_map_batch = []
-            top_left_batch = []
-            semantic_map_batch = []
-            homography_matrix = []
-
-            for size in range(self.batch_size):
-                data = next(it)
-                batch.append(data[0])
-                batch_rel.append(data[1])
-                mask_batch.append(data[2])
-                peds_batch.append(data[3])
-                loss_batch.append(data[4])
-                navigation_map_batch.append(data[5])
-                top_left_batch.append(data[6])
-                semantic_map_batch.append(data[7])
-                homography_matrix.append(data[8])
-            yield (
-                batch,
-                batch_rel,
-                mask_batch,
-                peds_batch,
-                loss_batch,
-                navigation_map_batch,
-                top_left_batch,
-                semantic_map_batch,
-                homography_matrix,
-            )
 
     def next_sequence(self):
         """Generator method that returns an iterator pointing to the next sequence.
@@ -176,17 +129,25 @@ class DataLoader:
                     self.__homography_matrix[idx_d],
                 )
 
-    def __load_data(self, delimiter, semantic_mapping):
-        """Load the datasets and define the list __frames.
+    def __load_data(self, delimiter, navigation_mapping, semantic_mapping):
+        """Load the datasets and define the lists __frames, __navigation_map,
+        __top_left, __semantic_map, __homography_matrix.
 
-        Load the datasets and define the list __frames wich contains all the
-        frames of the datasets and the list __navigation_map. __frames has shape
+        Load the datasets required by the model. __frames has shape
         [num_datasets, num_frames_dataset, num_peds_frame, 4] where 4 is
-        frameID, pedID, x and y.
+        frameID, pedID, x and y. If navigation_mapping is not None, it defines
+        __navigation_map with shape [num_datasets, navigatioHeight,
+        navigationWidth] and top_left with shape[num_datasets, 2]. If
+        semantic_mapping is not None, it defines __semantic_map with shape
+        [num_datasets, imageHeight, imageWidth, numLabels] and
+        __homography_matrix with shape [num_datasets, 3, 3]
 
         Args:
-          delimiter: string. Delimiter used to separate data inside the
+          delimiter: string. Delimiter used to separate data insid1e the
             datasets.
+          navigation_mapping: list. Mapping between navigation_maps and
+            datasets.
+          semantic_mapping: list. Mapping between semantic_maps and datasets.
 
         """
         # List that contains all the frames of the datasets. Each dataset is a
@@ -196,46 +157,66 @@ class DataLoader:
         self.__top_left = []
         self.__semantic_map = []
         self.__homography_matrix = []
-        semantic_map_labeled = {}
-        homography_map = {}
 
-        # Load and add the one hot encoding to the semantic maps
-        for i, smap in enumerate(self.__semantic):
-            # Load the semantic map
+        def load_semantic_map(smap, hom_path):
+            # Load the semantic map. It is a numpy array of shape [imageHeight,
+            # imageWidth, numLabels]
             semantic_map = np.load(smap)
-            homography = np.loadtxt(self.__homography[i], delimiter=delimiter)
+            # Load the homography matrix. The model requires to convert the
+            # image coordinates in world coordinates
+            homography = np.loadtxt(hom_path, delimiter=delimiter)
             filename = os.path.splitext(os.path.basename(smap))[0]
-            semantic_map_labeled[filename] = semantic_map
-            homography_map[filename] = homography
+            return (filename, (load_semantic_map, homography))
 
-        for i, dataset_path in enumerate(self.__datasets):
+        def load_datasets(dataset):
             # Load the dataset. Each line is formed by frameID, pedID, x, y
             dataset = np.loadtxt(dataset_path, delimiter=delimiter)
             # Get the frames in dataset
             num_frames = np.unique(dataset[:, 0])
-            # Initialize the array of frames for the current dataset
-            frames_dataset = []
-            # Load the navigation map
-            navigation_map = np.load(self.__navigation[i])
+            # For each frame add to frames the pedestrians that appear in the
+            # current frame
+            frames = map(lambda x: dataset[dataset[:, 0] == x], num_frames)
+            return frames
 
-            # Image has padding so we add padding to the top_left point.
+        def load_navigation(nmap):
+            # Load the navigation map. It is a numpy array of shape
+            navigation_map = np.load(nmap)
+            # Image has padding so we add padding to top_left
             top_left = [
                 np.floor(min(dataset[:, 2]) - self.neighborood_size / 2),
                 np.ceil(max(dataset[:, 3]) + self.neighborood_size / 2),
             ]
+            filename = os.path.splitext(os.path.basename[nmap])[0]
+            return (filename, (navigation_map, top_left))
 
-            # For each frame add to frames_dataset the pedestrian that appears
-            # in the current frame
-            for frame in num_frames:
-                # Get the pedestrians
-                frame = dataset[dataset[:, 0] == frame, :]
-                frames_dataset.append(frame)
+        # Process datasets using multiprocessing
+        with Pool() as p:
+            dataset_results = p.starmap_async(load_datasets, self.__datasets)
+            if navigation_mapping is not None:
+                navigation_results = p.starmap_async(
+                    load_semantic_map, self.__navigation
+                )
+            if semantic_mapping is not None:
+                semantic_results = p.starmap_async(
+                    load_semantic_map, zip(self.__semantic, self.__homography)
+                )
 
-            self.__frames.append(frames_dataset)
-            self.__navigation_map.append(navigation_map)
-            self.__top_left.append(top_left)
-            self.__semantic_map.append(semantic_map_labeled[semantic_mapping[i]])
-            self.__homography_matrix.append(homography_map[semantic_mapping[i]])
+        # Store the results
+        self.__frames = dataset_results
+
+        if navigation_mapping is not None:
+            navigation_dict = dict(navigation_results)
+            for i in range(self.__datasets):
+                values = semantic_dict[navigation_mapping[i]]
+                self.__navigation_map.append(values[0])
+                self.__top_left.append(values[1])
+
+        if semantic_mapping is not None:
+            semantic_dict = dict(semantic_results)
+            for i in range(self.__datasets):
+                values = semantic_dict[semantic_mapping[i]]
+                self.__semantic_map.append(values[0])
+                self.__homography_matrix.append(values[1])
 
     def __preprocess_data(self):
         """Preprocess the datasets and define the number of sequences and batches.
@@ -249,7 +230,7 @@ class DataLoader:
         self.__num_peds = []
         self.num_sequences = 0
 
-        for dataset in self.__frames:
+        def process_frames(dataset):
             # Initialize the array of trajectories for the current dataset.
             trajectories = []
             num_peds = []
@@ -284,14 +265,16 @@ class DataLoader:
                 else:
                     i += self.skip
 
-            self.__trajectories.append(trajectories)
-            self.__num_peds.append(num_peds)
+            return (trajectories, num_peds)
 
-        # num_batches counts only full batches. It discards the remaining
-        # sequences
-        self.num_batches = int(self.num_sequences / self.batch_size)
+        with Pool() as p:
+            results = p.starmap_async(process_frames, self.__frames)
+
+        for result in results:
+            self.__trajectories.append(results[0])
+            self.__num_peds.append(results[1])
+
         logging.info("There are {} sequences in loader".format(self.num_sequences))
-        logging.info("There are {} batches in loader".format(self.num_batches))
 
     def __get_sequence(self, trajectories):
         """Returns a tuple containing a trajectory sequence, the mask for the grid layer
