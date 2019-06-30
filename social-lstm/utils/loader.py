@@ -17,6 +17,7 @@ class DataLoader:
 
     """
 
+    # NOTE: Done
     def __init__(
         self,
         data_path,
@@ -99,9 +100,10 @@ class DataLoader:
         Returns:
           Generator object that contains a trajectory sequence, a relative
             trajectory sequence, the mask for the grid layer, the number of
-            pedestrian in the sequence, the mask for the loss function, the
-            navigation map, the top_left coordinates for the datset and the
-            semantic map.
+            pedestrian in the sequence, the mask for the loss function. If the
+            navigation map is required the generator returns the navigation map
+            and the top_left coordinates for the datset. If the semantic map is
+            required the geneartor returns the semantic map and the homography.
 
         """
         # Iterate through all sequences
@@ -109,13 +111,18 @@ class DataLoader:
             # Every dataset
             for idx_s, trajectories in enumerate(dataset):
                 sequence, mask, loss_mask = self.__get_sequence(trajectories)
+                _, peds, _ = sequence.shape
 
                 # Create the relative coordinates
-                sequence_rel = np.zeros(
-                    [self.trajectory_size, self.max_num_ped, 2], float
-                )
+                sequence_rel = np.zeros([self.trajectory_size, peds, 2], float)
                 sequence_rel[1:] = sequence[1:] - sequence[:-1]
                 num_peds = self.__num_peds[idx_d][idx_s]
+
+                batch = [sequence, sequence_rel, mask, num_peds, loss_mask]
+                if True:
+                    pass
+
+                yield batch
 
                 yield (
                     sequence,
@@ -166,9 +173,9 @@ class DataLoader:
             # image coordinates in world coordinates
             homography = np.loadtxt(hom_path, delimiter=delimiter)
             filename = os.path.splitext(os.path.basename(smap))[0]
-            return (filename, (load_semantic_map, homography))
+            return (filename, (semantic_map, homography))
 
-        def load_datasets(dataset):
+        def load_datasets(dataset_path):
             # Load the dataset. Each line is formed by frameID, pedID, x, y
             dataset = np.loadtxt(dataset_path, delimiter=delimiter)
             # Get the frames in dataset
@@ -176,40 +183,52 @@ class DataLoader:
             # For each frame add to frames the pedestrians that appear in the
             # current frame
             frames = map(lambda x: dataset[dataset[:, 0] == x], num_frames)
-            return frames
+            if navigation_mapping is not None:
+                # Image has padding so we add padding to top_left
+                top_left = [
+                    np.floor(min(dataset[:, 2]) - self.neighborood_size / 2),
+                    np.ceil(max(dataset[:, 3]) + self.neighborood_size / 2),
+                ]
+            return frames, top_left
 
-        def load_navigation(nmap):
+        def load_navigation_map(nmap):
             # Load the navigation map. It is a numpy array of shape
             navigation_map = np.load(nmap)
-            # Image has padding so we add padding to top_left
-            top_left = [
-                np.floor(min(dataset[:, 2]) - self.neighborood_size / 2),
-                np.ceil(max(dataset[:, 3]) + self.neighborood_size / 2),
-            ]
             filename = os.path.splitext(os.path.basename[nmap])[0]
-            return (filename, (navigation_map, top_left))
+            return (filename, navigation_map)
 
         # Process datasets using multiprocessing
         with Pool() as p:
             dataset_results = p.starmap_async(load_datasets, self.__datasets)
             if navigation_mapping is not None:
                 navigation_results = p.starmap_async(
-                    load_semantic_map, self.__navigation
+                    load_navigation_map, self.__navigation
                 )
             if semantic_mapping is not None:
                 semantic_results = p.starmap_async(
                     load_semantic_map, zip(self.__semantic, self.__homography)
                 )
+            dataset_results = dataset_results.get()
+            if navigation_mapping is not None:
+                navigation_resutls = navigation_resutls.get()
+                if semantic_mapping is not None:
+                    semnatic_results = semantic_results.get()
 
         # Store the results
-        self.__frames = dataset_results
+        if navigation_mapping is not None:
+            self.__frames = dataset_results
+        else:
+            for result in dataset_results:
+                self.__frames.append(result[0])
 
         if navigation_mapping is not None:
             navigation_dict = dict(navigation_results)
             for i in range(self.__datasets):
-                values = semantic_dict[navigation_mapping[i]]
+                values = navigation_dict[navigation_mapping[i]]
                 self.__navigation_map.append(values[0])
                 self.__top_left.append(values[1])
+            for result in dataset_results:
+                self.__top_left.append(result[1])
 
         if semantic_mapping is not None:
             semantic_dict = dict(semantic_results)
