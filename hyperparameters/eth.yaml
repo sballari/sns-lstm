@@ -10,7 +10,7 @@ prefetchSize: 100
 # Shuffle the dataset
 shuffle: False
 # Number of epochs
-epochs: 50
+epochs: 5
 # Use centered option in RMSProp
 centered: true
 # Learning rate
@@ -139,7 +139,7 @@ embeddingSize: 64
 # navigation, combined or null. Combined pooling is a list of the other pooling
 # layers
 poolingModule:
-  # - "social"
+  - "social"
   # - "semantic"
 # Image width plus padding
 imageWidth: 25
