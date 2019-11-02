@@ -70,9 +70,9 @@ def ave(pd,gt):
         deltaX = sum(sum( ((pd[es,8:,:,0] - gt[es,8:,:,0])**2)))
         deltaY = sum(sum( ((pd[es,8:,:,1] - gt[es,8:,:,1])**2)))
         
-        ave = ((deltaX + deltaY)**(1/2) )/(12*pNum)
+        ave = ((deltaX + deltaY)**(1/2) )/(pNum)
         totAve += ave
-    mean_ave = totAve/(gt.shape[0])
+    mean_ave = totAve/(12*gt.shape[0])
     return mean_ave
 
 print("mean ave : "+str(ave(pd,gt)))
@@ -84,11 +84,31 @@ def ave_a(pd,gt):
         deltaX = sum(sum( ((pd[es,8:,:pis[es],0] - gt[es,8:,:pis[es],0])**2)))
         deltaY = sum(sum( ((pd[es,8:,:pis[es],1] - gt[es,8:,:pis[es],1])**2)))
         
-        ave = ((deltaX + deltaY)**(1/2) )/(12*pis[es])
+        ave = ((deltaX + deltaY)**(1/2) )/(pis[es])
         totAve += ave
-    mean_ave = totAve/(gt.shape[0])
+    mean_ave = totAve/(12*gt.shape[0])
     return mean_ave
 
 print("mean ave con numpedsinseq: "+str(ave_a(pd,gt)))
 
 
+def final(pd,gt):
+    fsum = 0
+    for es in range(gt.shape[0]):
+        deltaX = sum((pd[es,19,:,0] - gt[es,19,:,0])**2)
+        deltaY = sum((pd[es,19,:,1] - gt[es,19,:,1])**2)
+        f = (deltaX+deltaY)**(1/2)/pedInExample(gt[es])
+        fsum += f
+    return fsum/(gt.shape[0])
+
+def final_a(pd,gt):
+    fsum = 0
+    for es in range(gt.shape[0]):
+        deltaX = sum((pd[es,19,:pis[es],0] - gt[es,19,:pis[es],0])**2)
+        deltaY = sum((pd[es,19,:pis[es],1] - gt[es,19,:pis[es],1])**2)
+        f = ((deltaX+deltaY)**(1/2))/pis[es]
+        fsum += f
+    return fsum/(gt.shape[0])
+
+print("final : "+str(final(pd,gt)))
+print("final pis: "+str(final_a(pd,gt)))
