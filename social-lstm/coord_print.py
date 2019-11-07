@@ -30,17 +30,34 @@ def plot_path(es,ped):
     esempio = es
     pedone = ped
     plt.subplot(3,1,1)
+    
     plt.plot(gt[esempio,:,pedone,0],gt[esempio,:,pedone,1], color='green',label='gt')
     plt.plot(pd[esempio,:,pedone,0],pd[esempio,:,pedone,1], color='red',label='pd')
+    for i in range(pd.shape[1]):
+        plt.text(pd[esempio,i,pedone,0],pd[esempio,i,pedone,1], str(i))
+
+    for i in range(gt.shape[1]):
+        plt.text(gt[esempio,i,pedone,0],gt[esempio,i,pedone,1], str(i))
+    
+    for i in range(pis[es]):
+        if i != pedone : 
+            plt.plot(gt[esempio,:,i,0],gt[esempio,:,i,1], color='grey')
+
     plt.scatter(pd[esempio,7,pedone,0],pd[esempio,7,pedone,1])
     plt.legend()
 
     plt.subplot(3,1,2)
+    plt.plot(gt[esempio,:,pedone,0],gt[esempio,:,pedone,1], color='white')
     plt.plot(pd[esempio,:,pedone,0],pd[esempio,:,pedone,1], color='red',label='pd')
+    for i in range(pd.shape[1]):
+        plt.text(pd[esempio,i,pedone,0],pd[esempio,i,pedone,1], str(i))
     plt.legend()
 
     plt.subplot(3,1,3)
+    plt.plot(pd[esempio,:,pedone,0],pd[esempio,:,pedone,1], color='white')
     plt.plot(gt[esempio,:,pedone,0],gt[esempio,:,pedone,1], color='green',label='gt')
+    for i in range(gt.shape[1]):
+        plt.text(gt[esempio,i,pedone,0],gt[esempio,i,pedone,1], str(i))
     plt.legend()
 
     plt.show()
@@ -112,3 +129,28 @@ def final_a(pd,gt):
 
 print("final : "+str(final(pd,gt)))
 print("final pis: "+str(final_a(pd,gt)))
+
+
+def max_diff(es,ped):
+    deltaX = (pd[es,:,ped,0] - gt[es,:,ped,0])**2
+    deltaY = (pd[es,:,ped,1] - gt[es,:,ped,1])**2
+    tmp = (deltaX + deltaY)# print (tmp )**(0.5)
+    return tmp.max()
+
+def nzError(es):
+    count =0
+    for ped in range(gt.shape[2]):
+        if max_diff(es,ped)!=0 : count+=1
+    return count
+
+
+print ("\n\n\n")
+es = 0
+ped =2
+mx = max_diff(es,ped)
+print("max dist ped %d es %d : %f" %(ped,es,mx))
+print("ped not perfect in es %d : %d" %(es,nzError(es)))
+print ("pis in %d : %d" %(es,pis[es]))
+for i in range(pis[es]) : 
+    plot_path(es,i)
+
