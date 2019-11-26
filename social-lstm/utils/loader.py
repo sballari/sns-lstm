@@ -1,6 +1,6 @@
 """Module that defines the classes that provides the input for the classes
 defined in the dataset module. Each class load datasets, preprocess them and
-create two generators that return sequences or batches of trajectories.
+ two generators that return sequences or batches of trajectories.
 
 """
 import os
@@ -348,7 +348,7 @@ class DataLoader:
             slice and the number of pedestrians thate are trajectory_size long
             in the dataset slice. In the first positions of the ndarray there
             are the trajectories long enough. The shape of the ndarray is
-            [peds_sequence, trajectory_size, 4].
+            [peds_sequence, trajectory_size, 4]. (x,y,frame_id,id_pedone)
 
         """
         trajectories_full = np.array(trajectories_full)

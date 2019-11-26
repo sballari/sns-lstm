@@ -139,7 +139,6 @@ def main():
                 + "--------------------------------------------------------------------------------\n"
             )
             # Initialize all the variables in the graph
-            sess.run(tf.global_variables_initializer())
 
             for epoch in range(hparams.epochs):
                 logging.info("Starting epoch {}".format(epoch + 1))

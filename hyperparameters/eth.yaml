@@ -6,9 +6,9 @@ name: "eth"
 # -----------------------------------------------------------------------------
 
 # Buffer size of the tf.data.Dataset.prefetch option
-prefetchSize: 100
+prefetchSize: 10
 # Shuffle the dataset
-shuffle: False
+shuffle: True
 # Number of epochs
 epochs: 5
 # Use centered option in RMSProp
@@ -22,7 +22,7 @@ clippingRatio: 5
 # Optimizer decay rate
 optimizerDecay: 0.95
 # Optimizer momentum rate
-optimizerMomentum: 0.2
+optimizerMomentum: 0.0
 # Weight regularization rate
 l2Rate: 0.005
 
@@ -139,7 +139,7 @@ embeddingSize: 64
 # navigation, combined or null. Combined pooling is a list of the other pooling
 # layers
 poolingModule:
-  - "social"
+  # - "social"
   # - "semantic"
 # Image width plus padding
 imageWidth: 25

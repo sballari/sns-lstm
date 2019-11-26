@@ -1,7 +1,6 @@
 """Module that defines the SocialLSTM model."""
 import logging
 import tensorflow as tf
-
 import losses
 import pooling_layers
 import position_estimates
@@ -205,6 +204,8 @@ class SocialModel:
                 coordinates_predicted = position_estimate(
                     layered_output, output_size, pedestrians_coordinates_rel[frame + 1]
                 )
+                
+                
             elif phase == SAMPLE:
                 new_pedestrians_coordinates_rel = position_estimate(
                     layered_output, output_size
@@ -263,9 +264,11 @@ class SocialModel:
                     loss_mask[-hparams.predLen :],
                     2,
                 )
+                
                 self.loss = loss_function(loss_values[1])
                 self.loss = tf.div(self.loss, tf.cast(self.num_peds_frame, tf.float32))
-
+                
+                
             # Add weights regularization
             tvars = tf.trainable_variables()
             l2_loss = (

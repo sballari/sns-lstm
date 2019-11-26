@@ -29,6 +29,8 @@ print("Apd: (%f,%f)" %(pd[esempio,0,pedone,0], pd[esempio,0,pedone,1]))
 def plot_path(es,ped):
     esempio = es
     pedone = ped
+    ave,fde = ave_fde_traj(pd,gt,es,ped)
+    plt.suptitle("esempio: %d, pedone %d of %d\n aveTraj: %f , fdeTraj %f" %(esempio,ped,pis[es]-1,ave,fde))
     plt.subplot(3,1,1)
     
     plt.plot(gt[esempio,:,pedone,0],gt[esempio,:,pedone,1], color='green',label='gt')
@@ -94,6 +96,16 @@ def ave(pd,gt):
 
 print("mean ave : "+str(ave(pd,gt)))
 
+def ave_fde_traj(pd,gt,es,ped):
+    deltaXq = ((pd[es,8:,ped,0] - gt[es,8:,ped,0])**2)
+    deltaYq = ((pd[es,8:,ped,1] - gt[es,8:,ped,1])**2)
+    e = (deltaXq+ deltaYq)**0.5
+    ave = sum(e)/12
+    fde = (pd[es,19,ped,0] - gt[es,19,ped,0])**2 + (pd[es,19,ped,1] - gt[es,19,ped,1])**2 
+    fde = fde**0.5
+    return ave,fde
+
+
 def ave_a(pd,gt):
     totAve = 0
     for es in range(gt.shape[0]):
@@ -145,12 +157,17 @@ def nzError(es):
 
 
 print ("\n\n\n")
-es = 0
+es = 188
+ess = [10,22,66,188,189,250]
 ped =2
 mx = max_diff(es,ped)
 print("max dist ped %d es %d : %f" %(ped,es,mx))
 print("ped not perfect in es %d : %d" %(es,nzError(es)))
 print ("pis in %d : %d" %(es,pis[es]))
-for i in range(pis[es]) : 
-    plot_path(es,i)
+
+
+
+for es in ess :
+    for i in range(pis[es]) : 
+        plot_path(es,i)
 
