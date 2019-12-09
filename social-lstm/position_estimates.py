@@ -62,20 +62,7 @@ def social_train_position_estimate(cell_output, output_size, coordinates_gt):
         
         std_x = tf.exp(std_x) #stx>=0
         std_y = tf.exp(std_y) #sty>=0
-        rho = tf.tanh(rho) #normalizza?
-
-        '''
-        print("\n\n\n\n\n\n\n\n[SIMONE!!!!!!!!!!!!!!!!!!!!!]shape mu_x :"+ str(mu_x.shape))
-        print("\n[SIMONE!!!!!!!!!!!!!!!!!!!!!]shape gtruth :"+ str(coordinates_gt.shape))
-
-        
-        a1 = tf.Assert(tf.greater_equal(tf.reduce_min(std_x),.0),[std_x]) #ok
-        a2 = tf.Assert(tf.greater_equal(tf.reduce_min(std_x),.0),[std_y]) #ok
-        
-        with tf.control_dependencies([a1,a2]):
-          std_x = tf.identity(std_x)
-          std_y = tf.identity(std_y)
-        
+        rho = tf.tanh(rho) #normalizza?    
 
         # Equations 24 & 25
         stds = tf.multiply(std_x, std_y)
@@ -98,18 +85,10 @@ def social_train_position_estimate(cell_output, output_size, coordinates_gt):
       
 
         normal = tf.div(n_num, n_den)
-        a3 = tf.Assert(tf.greater_equal(tf.reduce_min(normal),.0),[normal],name="gt0")
-        a4 = tf.Assert(tf.less_equal(tf.reduce_min(normal),1.0),[normal],name="lt1")
-        with tf.control_dependencies([a3,a4]):
-          normal = tf.identity(normal)
 
-        print("\n\n\n\n\n\n\n\n[SIMONE!!!!!!!!!!!!!!!!!!!!!]shape normal :"+ str(normal.shape))
-        '''
-        normal = tf_2d_normal(coordinates_gt[:, 0],coordinates_gt[:, 1],mu_x,mu_y,std_x,std_y,rho)
-        a3 = tf.Assert(tf.greater_equal(tf.reduce_min(normal),.0),[normal],name="gt0")
-        a4 = tf.Assert(tf.less_equal(tf.reduce_min(normal),1.0),[normal],name="lt1")
-        with tf.control_dependencies([a3,a4]):
-          normal = tf.identity(normal)
+        
+        
+        # normal = tf_2d_normal(coordinates_gt[:, 0],coordinates_gt[:, 1],mu_x,mu_y,std_x,std_y,rho)
         return normal
 
 
@@ -137,7 +116,7 @@ def social_sample_position_estimate(cell_output, output_size):
         std_x = tf.exp(std_x)
         std_y = tf.exp(std_y)
         rho = tf.tanh(rho)
-        '''
+        
         # Kaiser-Dickman algorithm (Kaiser & Dickman, 1962)
         # Generate two sample X1, X2 from the standard normal distribution
         # (mu = 0, sigma = 1)
@@ -158,27 +137,5 @@ def social_sample_position_estimate(cell_output, output_size):
         coordinates = tf.stack([coords_x, coords_y], 1)
         
         return coordinates
-        '''
-        coordinates = list()
-        dx, dy = sample_gaussian_2d(mu_x, mu_y,std_x,std_y,rho)
-        return(dx,dy)
-        '''
-        for i in range(mu_x.shape[0]):
-          dx, dy = sample_gaussian_2d(mu_x[i], mu_y[i],std_x[i],std_y[i],rho[i])
-          coordinates.append( (dx,dy) )
-        '''
 
 
-def sample_gaussian_2d(mux,muy,sx,sy, rho):
-  #sess.run()
-  mean = [mux, muy]
-  
-  cov = [[sx*sx, rho*sx*sy],[rho*sx*sy,sy*sy]]
-  tfd = tfp.distributions
-
-  x = tfd.Sample(tfd.Independent(
-    tfd.Normal(loc= mean, scale=[sx,sy])
-  ),sample_shape=1)
-  sample = x.sample()
-  return sample
-  #return x[0][0],x[0][1]
