@@ -31,7 +31,7 @@ l2Rate: 0.005
 # -----------------------------------------------------------------------------
 
 # Folder of the datasets
-dataPath: "../datasets"
+dataPath: "../datasets_quan"
 # Name of the training files in the dataPath
 trainDatasets:
   - "train/students003.txt"
