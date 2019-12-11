@@ -1,0 +1,193 @@
+# Name of the experiment
+name: "eth"
+
+# -----------------------------------------------------------------------------
+#                             Optimization settings                           |
+# -----------------------------------------------------------------------------
+
+# Buffer size of the tf.data.Dataset.prefetch option
+prefetchSize: 10
+# Shuffle the dataset
+shuffle: True
+# Number of epochs
+epochs: 30
+# Use centered option in RMSProp
+centered: true
+# Learning rate
+learningRate: 0.003
+# Learning rate decay
+learningRateDecay: 0.95
+# Clipping ratio
+clippingRatio: 5
+# Optimizer decay rate
+optimizerDecay: 0.95
+# Optimizer momentum rate
+optimizerMomentum: 0.0
+# Weight regularization rate
+l2Rate: 0.005
+
+# -----------------------------------------------------------------------------
+#                             Dataset parameters                              |
+# -----------------------------------------------------------------------------
+
+# Folder of the datasets
+dataPath: "../datasets"
+# Name of the training files in the dataPath
+trainDatasets:
+  - "train/students003.txt"
+  - "train/students003_0.txt"
+  - "train/students001.txt"
+  - "train/arxiepiskopi1.txt"
+  - "train/crowds_zara02_0.txt"
+  - "train/arxiepiskopi1_3.txt"
+  - "train/crowds_zara02.txt"
+  - "train/crowds_zara03.txt"
+  - "train/students001_0.txt"
+  # - "train/crowds_zara03_1.txt "
+
+# Name of the validation files in the dataPath
+validationDatasets:
+  - "val/biwi_hotel_4.txt"
+  - "val/crowds_zara02_2.txt"
+  - "val/crowds_zara03_0.txt"
+  - "val/students001_4.txt"
+  - "val/students003_3.txt"
+  - "val/arxiepiskopi1_0.txt"
+  - "val/PETS09-S2L1_1.txt"
+# Name of the test files in the dataPath
+testDatasets:
+  -"test/biwi_eth.txt"
+  -"test/crowds_zara01.txt"
+  -"test/uni_examples.txt"
+  -"test/coupa_0.txt"
+  -"test/coupa_1.txt" 
+  -"test/gates_2.txt"
+  -"test/hyang_0.txt"
+  -"test/hyang_1.txt"
+  -"test/hyang_3.txt"
+  -"test/hyang_8.txt"
+  -"test/little_0.txt"
+  -"test/little_1.txt"
+  -"test/little_2.txt"
+  -"test/little_3.txt"
+  -"test/nexus_5.txt"
+  -"test/nexus_6.txt"
+  -"test/quad_0.txt"
+  -"test/quad_1.txt"
+  -"test/quad_2.txt"
+  -"test/quad_3.txt"
+# Name of the training navigation maps in dataPath
+trainMaps:
+  - "navMap/hotel.npy"
+  - "navMap/zara1.npy"
+  - "navMap/zara2.npy"
+  - "navMap/zara3.npy"
+  - "navMap/univ1.npy"
+  - "navMap/univ2.npy"
+  - "navMap/univ3.npy"
+# Name of the validation navigation maps in dataPath
+validationMaps:
+  - "navMap/hotel.npy"
+  - "navMap/zara1.npy"
+  - "navMap/zara2.npy"
+  - "navMap/zara3.npy"
+  - "navMap/univ1.npy"
+  - "navMap/univ2.npy"
+  - "navMap/univ3.npy"
+# Name of the test navigation maps in dataPath
+testMaps:
+  - "navMap/eth.npy"
+# Number of labels of the semantic map
+numLabels: 8
+# List of semantic maps
+semanticMaps:
+  - "semMap/eth.npy"
+  - "semMap/hotel.npy"
+  - "semMap/univ.npy"
+  - "semMap/zara.npy"
+# List of homography matrix
+homography:
+  - "homography/eth.txt"
+  - "homography/hotel.txt"
+  - "homography/univ.txt"
+  - "homography/zara.txt"
+# Name of the training semantic mapping
+trainMapping:
+  - "hotel"
+  - "zara"
+  - "zara"
+  - "zara"
+  - "univ"
+  - "univ"
+  - "univ"
+# Name of the validation semantic mapping
+validationMapping:
+  - "hotel"
+  - "zara"
+  - "zara"
+  - "zara"
+  - "univ"
+  - "univ"
+  - "univ"
+# Name of the test semantic mapping
+testMapping:
+  - "eth"
+# Delimiter used in the files of the dataset
+delimiter: " "
+# Number of frame observed
+obsLen: 8
+# Number of frame that the model has to predict
+predLen: 12
+# Number of frames to skip while making the dataset. If True, the number of
+# frame to skip is random, between 1 and (obsLen + predLen). For e.g. if
+# sequence_1 in the dataset is from Frame_1 - Frame_N and skip = 5 then the
+# sequence_2 will be start from Frame_N+5
+skip: 1
+
+# -----------------------------------------------------------------------------
+#                              Model parameters                               |
+# -----------------------------------------------------------------------------
+
+# Maximum number of pedestrian per frame
+maxNumPed: 93
+# Size of the sum pooling window
+gridSize: 8
+# Size of the neighborhood
+neighborhoodSize: 2
+# Number of hidden
+rnnSize: 128
+# Dimension of the embedding layer 
+embeddingSize: 64
+# Type of pooling module to use. Option supported: social, occupancy,
+# navigation, combined or null. Combined pooling is a list of the other pooling
+# layers
+poolingModule:
+  # - "social"
+  # - "semantic"
+# Image width plus padding
+imageWidth: 25
+# Image height plus padding
+imageHeight: 20
+# Width of the navigation grid
+navigationWidth: 400
+# Height of the navigation grid
+navigationHeight: 320
+# Kernel size for the average pooling
+kernelSize: 2
+# Size of the neighborhood navigation grid
+navigationGrid: 33
+# Size of the neighborhood semantic grid
+semanticGridSize: 50
+
+# -----------------------------------------------------------------------------
+#                                Logger settings                              |
+# -----------------------------------------------------------------------------
+
+# Folder where to save the logs
+logFolder: "logs"
+# Logger level
+logLevel: "INFO"
+# Folder where to save the model
+modelFolder: "models"
+# Save the sampled coordinates
+saveCoordinates: true
