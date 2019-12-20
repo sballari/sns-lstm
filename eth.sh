@@ -1,0 +1,1 @@
+python3 vlstm_train.py --num_epochs 50 --grad_clip 5 --learning_rate 0.003 --decay_rate 0.95 --lambda_param 0.005 --dropout 0.0 --maxNumPeds 93 --use_cuda True --gru False

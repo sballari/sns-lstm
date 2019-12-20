@@ -35,11 +35,12 @@ def lis2ind(lisfilepath,destpath):
             l_pid = sorted(listPid,key=itemgetter(0)) 
             srow=""
             for i in l_pid:
-                for e in i : 
-                    srow = srow + ("%f " %e) 
-                srow = srow + '\n'
-
-            wf.write(srow)
+                frame = int(i[0])
+                pid = int(i[1])
+                x = i[2]
+                y = i[3]
+                srow = str(frame)+" "+str(pid)+" "+str(x)+" "+str(y)+"\n"
+                wf.write(srow)
     wf.close()
 
 
@@ -47,8 +48,11 @@ def explore_directories():
     paths = [ "test/", "train/", "val/"]
     for path in paths:
         for filename in os.listdir("lisotto/datasets/"+path):
-            lis2ind("lisotto/datasets/"+path+filename, "datasets_lis2quan/"+path+filename )
-    print("ack")
+            truncated_filename = filename[:-4]
+            print("Now converting: "+truncated_filename)
+            os.mkdir(os.path.dirname("datasets_lis2quan/"+path+truncated_filename+"/"))
+            lis2ind("lisotto/datasets/"+path+filename, "datasets_lis2quan/"+path+truncated_filename+"/"+filename )
+    print("ack: ordinazione terminata")
 
 
 

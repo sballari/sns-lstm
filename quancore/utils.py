@@ -10,7 +10,7 @@ from helper import *
 
 class DataLoader():
 
-    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=False, infer=False, generate = False):
+    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=True, train_data=None, val_data=None, infer=False, generate = False):
         '''
         Initialiser function for the DataLoader class
         params:
@@ -21,6 +21,35 @@ class DataLoader():
         generate : flag for data generation mode
         forcePreProcess : Flag to forcefully preprocess the data again from csv files
         '''
+
+       
+
+        dataPath = "../datasets_lis2quan/"
+
+
+        #base train files
+        if train_data!=None :
+            for i in range(len(train_data)):
+                train_data[i] = dataPath+train_data[i]
+            base_train_dataset = train_data
+        else :
+            base_train_dataset = [
+                    '/data/train/biwi/biwi_hotel.txt'
+                    '''
+                    #LISOTTO
+                    "/data/biwi/train/biwi_hotel_train.txt",
+                    "/data/train/crowds/crowds_zara01_train.txt",
+                    "/data/train/crowds/crowds_zara02_train.txt",
+                    "/data/train/crowds/crowds_zara03_train.txt",
+                    "/data/train/crowds/students001_train.txt",
+                    "/data/train/crowds/students003_train.txt",
+                    "/data/train/crowds/uni_examples_train.txt"
+                    '''
+                    ]
+        if val_data!=None:
+            for i in range(len(val_data)):
+                val_data[i] = dataPath+val_data[i]
+
         base_test_dataset=  ['/data/test/biwi/biwi_eth.txt', 
                         '/data/test/crowds/crowds_zara01.txt',
                         '/data/test/crowds/uni_examples.txt', 
@@ -29,28 +58,19 @@ class DataLoader():
                           '/data/test/stanford/little_0.txt','/data/test/stanford/little_1.txt','/data/test/stanford/little_2.txt','/data/test/stanford/little_3.txt','/data/test/stanford/nexus_5.txt','/data/test/stanford/nexus_6.txt',
                           '/data/test/stanford/quad_0.txt','/data/test/stanford/quad_1.txt','/data/test/stanford/quad_2.txt','/data/test/stanford/quad_3.txt'
                           ]
-        
-        #base train files
-        base_train_dataset = [
-                '/data/train/biwi/biwi_hotel.txt'
-                '''
-                #LISOTTO
-                "/data/biwi/train/biwi_hotel_train.txt",
-                "/data/train/crowds/crowds_zara01_train.txt",
-                "/data/train/crowds/crowds_zara02_train.txt",
-                "/data/train/crowds/crowds_zara03_train.txt",
-                "/data/train/crowds/students001_train.txt",
-                "/data/train/crowds/students003_train.txt",
-                "/data/train/crowds/uni_examples_train.txt"
-                '''
-                ]
+
+
+
         # dimensions of each file set
-        self.dataset_dimensions = {'biwi':[720, 576], 'crowds':[720, 576], 'stanford':[595, 326], 'mot':[768, 576]}
+        self.dataset_dimensions = { 'biwi':[720, 576],
+                                    'crowds':[720, 576],
+                                    'stanford':[595, 326],
+                                    'mot':[768, 576]}
         
         # List of data directories where raw data resides
-        self.base_train_path = 'data/train/'
-        self.base_test_path = 'data/test/'
-        self.base_validation_path = 'data/val/'
+        self.base_train_path = '../datasets_lis2quan/train/'
+        self.base_test_path = '../datasets_lis2quan/test/'
+        self.base_validation_path = '../datasets_lis2quan/val/'
 
         # check infer flag, if true choose test directory as base directory
         if infer is False:
@@ -59,9 +79,11 @@ class DataLoader():
             self.base_data_dirs = base_test_dataset
 
         # get all files using python os and base directories
-        self.train_dataset = self.get_dataset_path(self.base_train_path, f_prefix)
+        #self.train_dataset = self.get_dataset_path(self.base_train_path, f_prefix)
         self.test_dataset = self.get_dataset_path(self.base_test_path, f_prefix)
-        self.validation_dataset = self.get_dataset_path(self.base_validation_path, f_prefix)
+        #self.validation_dataset = self.get_dataset_path(self.base_validation_path, f_prefix)
+        self.validation_dataset = val_data
+        self.train_dataset = train_data
 
 
         # if generate mode, use directly train base files
@@ -69,12 +91,17 @@ class DataLoader():
             self.train_dataset = [os.path.join(f_prefix, dataset[1:]) for dataset in base_train_dataset]
 
         #request of use of validation dataset
+        '''
         if num_of_validation>0:
             self.additional_validation = True
         else:
             self.additional_validation = False
+            '''
+        self.additional_validation =True
+        
 
         # check validation dataset availibility and clip the reuqested number if it is bigger than available validation dataset
+        '''
         if self.additional_validation:
             if len(self.validation_dataset) is 0:
                 print("There is no validation dataset.Aborted.")
@@ -82,6 +109,8 @@ class DataLoader():
             else:
                 num_of_validation = np.clip(num_of_validation, 0, len(self.validation_dataset))
                 self.validation_dataset = random.sample(self.validation_dataset, num_of_validation)
+        '''
+       
 
         # if not infer mode, use train dataset
         if infer is False:
@@ -218,7 +247,7 @@ class DataLoader():
 
             # if training mode, read train file to pandas dataframe and process
             if self.infer is False:
-                df = pd.read_csv(directory, dtype={'frame_num':'int','ped_id':'int' }, delimiter = delimiter,  header=None, names=column_names)
+                df = pd.read_csv(directory, dtype={'frame_num':'float','ped_id':'float' }, delimiter = delimiter,  header=None, names=column_names)
                 self.target_ids = np.array(df.drop_duplicates(subset={'ped_id'}, keep='first', inplace=False)['ped_id'])
 
 
@@ -325,6 +354,7 @@ class DataLoader():
         data_file : the path to the pickled data file
         validation_set : flag for validation dataset
         '''
+        print("[LOG] load_preprocessed")
         # Load data from the pickled file
         if(validation_set):
             print("Loading validaton datasets: ", data_file)
@@ -575,11 +605,17 @@ class DataLoader():
         unique_ids = pd.unique(np.concatenate(pedlist).ravel().tolist()).astype(int)
         # create a lookup table which maps ped ids -> array indices
         lookup_table = dict(zip(unique_ids, range(0, len(unique_ids))))
-
+        #print("*********************")
+        #print("lookup table")
+        #print(lookup_table)
         seq_data = np.zeros(shape=(self.seq_length, len(lookup_table), 2))
-
+        #print("seq data.shape")
+        #print(seq_data.shape)
         # create new structure of array
         for ind, frame in enumerate(x_seq):
+            #print("frame "+str(frame))
+            #print("ind "+str(ind))
+
             corr_index = [lookup_table[x] for x in frame[:, 0]]
             seq_data[ind, corr_index,:] = frame[:,1:3]
 
@@ -716,5 +752,6 @@ class DataLoader():
 
     def get_dataset_dimension(self, file_name):
         # return dataset dimension using dataset file name
+        print(self.dataset_dimensions)
         return self.dataset_dimensions[file_name]
 

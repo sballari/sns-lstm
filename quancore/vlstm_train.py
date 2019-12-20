@@ -11,54 +11,60 @@ import subprocess
 from vlstm_model import VLSTMModel
 from utils import DataLoader
 from helper import *
+from yparams import *
 
 
 def main():
     
     parser = argparse.ArgumentParser()
+    parser.add_argument('--experiment', type=str)
+    args = parser.parse_args()
+    hparams = YParams(args.experiment)
+
+
     # RNN size parameter (dimension of the output/hidden state)
     parser.add_argument('--input_size', type=int, default=2)
     parser.add_argument('--output_size', type=int, default=5)
     # RNN size parameter (dimension of the output/hidden state)
-    parser.add_argument('--rnn_size', type=int, default=128,
+    parser.add_argument('--rnn_size', type=int, default=hparams.rnnSize,
                         help='size of RNN hidden state')
     # Size of each batch parameter
     parser.add_argument('--batch_size', type=int, default=5,
                         help='minibatch size')
     # Length of sequence to be considered parameter
-    parser.add_argument('--seq_length', type=int, default=20,
+    parser.add_argument('--seq_length', type=int, default=hparams.predLen+hparams.obsLen,
                         help='RNN sequence length')
-    parser.add_argument('--pred_length', type=int, default=12,
+    parser.add_argument('--pred_length', type=int, default=hparams.predLen,
                         help='prediction length')
     # Number of epochs parameter
-    parser.add_argument('--num_epochs', type=int, default=30,
+    parser.add_argument('--num_epochs', type=int, default=hparams.epochs,
                         help='number of epochs')
     # Frequency at which the model should be saved parameter
     parser.add_argument('--save_every', type=int, default=400,
                         help='save frequency')
     # TODO: (resolve) Clipping gradients for now. No idea whether we should
     # Gradient value at which it should be clipped
-    parser.add_argument('--grad_clip', type=float, default=5.,
+    parser.add_argument('--grad_clip', type=float, default=hparams.clippingRatio,
                         help='clip gradients at this value')
     # Learning rate parameter
-    parser.add_argument('--learning_rate', type=float, default=0.003,
+    parser.add_argument('--learning_rate', type=float, default=hparams.learningRate,
                         help='learning rate')
     # Decay rate for the learning rate parameter
-    parser.add_argument('--decay_rate', type=float, default=0.95,
+    parser.add_argument('--decay_rate', type=float, default=hparams.optimizerDecay,
                         help='decay rate for rmsprop')
     # Dropout not implemented.
     # Dropout probability parameter
     parser.add_argument('--dropout', type=float, default=0.0,
                         help='dropout probability')
     # Dimension of the embeddings parameter
-    parser.add_argument('--embedding_size', type=int, default=64,
+    parser.add_argument('--embedding_size', type=int, default=hparams.embeddingSize,
                         help='Embedding dimension for the spatial coordinates')
     # Maximum number of pedestrians to be considered
-    parser.add_argument('--maxNumPeds', type=int, default=27,
+    parser.add_argument('--maxNumPeds', type=int, default=hparams.maxNumPed,
                         help='Maximum Number of Pedestrians')
 
     # Lambda regularization parameter (L2)
-    parser.add_argument('--lambda_param', type=float, default=0.005,
+    parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
                         help='L2 regularization parameter')
 
     parser.add_argument('--use_cuda', action="store_true", default=False,
@@ -69,29 +75,34 @@ def main():
     
     parser.add_argument('--drive', action="store_true", default=False,
                         help='Use Google drive or not')
+    
 
+    train_data = hparams.trainDatasets
+    val_data = hparams.validationDatasets
+    test_data = hparams.testDatasets
+
+    '''
     parser.add_argument('--num_validation', type=int, default=3,
                         help='Total number of validation dataset for validate accuracy')
+    '''
 
     parser.add_argument('--freq_validation', type=int, default=1,
                         help='Frequency number(epoch) of validation using validation data')
-
     parser.add_argument('--freq_optimizer', type=int, default=8,
                         help='Frequency number(epoch) of learning decay for optimizer')
-
     
     args = parser.parse_args()
     
-    train(args)
+    train(args, train_data, val_data)
 
 
-def train(args):
+def train(args, train_data, val_data):
     origin = (0,0)
     reference_point = (0,1)
     validation_dataset_executed = False
   
     prefix = ''
-    f_prefix = '.'
+    f_prefix = ''
     if args.drive is True:
       prefix='drive/semester_project/social_lstm_final/'
       f_prefix = 'drive/semester_project/social_lstm_final'
@@ -102,6 +113,7 @@ def train(args):
       subprocess.call([f_prefix+'/make_directories.sh'])
 
     args.freq_validation = np.clip(args.freq_validation, 0, args.num_epochs)
+
     validation_epoch_list = list(range(args.freq_validation, args.num_epochs+1, args.freq_validation))
     validation_epoch_list[-1]-=1
 
@@ -109,7 +121,7 @@ def train(args):
 
     # Create the data loader object. This object would preprocess the data in terms of
     # batches each of size args.batch_size, of length args.seq_length
-    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, args.num_validation, forcePreProcess=True)
+    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, train_data=train_data, val_data=val_data)
 
     method_name = "VANILLALSTM"
     model_name = "LSTM"
@@ -182,7 +194,8 @@ def train(args):
 
             # Get batch data
             x, y, d , numPedsList, PedsList ,target_ids= dataloader.next_batch()
-
+            #print(len(x))
+            #print(len(x[1]))
             loss_batch = 0
 
             # For each sequence
@@ -195,10 +208,18 @@ def train(args):
              
                 #get processing file name and then get dimensions of file
                 folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                dataset_data = dataloader.get_dataset_dimension(folder_name)
+                #dataset_data = dataloader.get_dataset_dimension(folder_name)
+                '''print("len(x_seq)")
+                print(len(x_seq))
+                print("len(x_seq[0][0])")
+                print(len(x_seq[0][0]))'''
+
+                
 
                 #dense vector creation
                 x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
+                #print("x_seq")
+                #print(x_seq)
                 #print("lookup seq: " + str(lookup_seq))
                 #print("target_id: " + str(target_id))
                 
@@ -283,7 +304,7 @@ def train(args):
                     
                     #get processing file name and then get dimensions of file
                     folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                    dataset_data = dataloader.get_dataset_dimension(folder_name)
+                    #dataset_data = dataloader.get_dataset_dimension(folder_name)
                     
                     #dense vector creation
                     x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
@@ -400,7 +421,7 @@ def train(args):
                     
                     #get processing file name and then get dimensions of file
                     folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                    dataset_data = dataloader.get_dataset_dimension(folder_name)
+                    #dataset_data = dataloader.get_dataset_dimension(folder_name)
                     
                     #dense vector creation
                     x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
