@@ -79,12 +79,13 @@ def main():
 
     train_data = hparams.trainDatasets
     val_data = hparams.validationDatasets
-    test_data = hparams.testDatasets
+    
+    
 
-    '''
-    parser.add_argument('--num_validation', type=int, default=3,
-                        help='Total number of validation dataset for validate accuracy')
-    '''
+    
+    parser.add_argument('--num_validation', type=int, default=1,
+                        help='1 if val 0 otherwise')
+    
 
     parser.add_argument('--freq_validation', type=int, default=1,
                         help='Frequency number(epoch) of validation using validation data')
@@ -93,10 +94,10 @@ def main():
     
     args = parser.parse_args()
     
-    train(args, train_data, val_data)
+    train(args, train_data, val_data,hparams)
 
 
-def train(args, train_data, val_data):
+def train(args, train_data, val_data,hparams):
     origin = (0,0)
     reference_point = (0,1)
     validation_dataset_executed = False
@@ -121,14 +122,14 @@ def train(args, train_data, val_data):
 
     # Create the data loader object. This object would preprocess the data in terms of
     # batches each of size args.batch_size, of length args.seq_length
-    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, train_data=train_data, val_data=val_data)
+    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, num_of_validation=args.num_validation, train_data=train_data, val_data=val_data)
 
-    method_name = "VANILLALSTM"
-    model_name = "LSTM"
-    save_tar_name = method_name+"_lstm_model_"
+    method_name = "" #"VANILLALSTM"
+    model_name = hparams.name
+    save_tar_name = "" #method_name+"_lstm_model_"
     if args.gru:
         model_name = "GRU"
-        save_tar_name = method_name+"_gru_model_"
+        save_tar_name = "" #method_name+"_gru_model_"
 
 
     # Log directory
@@ -143,7 +144,8 @@ def train(args, train_data, val_data):
     log_file = open(os.path.join(log_directory, method_name, model_name, 'val.txt'), 'w+')
 
     # model directory
-    save_directory = os.path.join(prefix, 'model/')
+    #save_directory = os.path.join(prefix, 'model/')
+    save_directory = hparams.modelFolder+ "/" 
     
     # Save the arguments int the config file
     with open(os.path.join(save_directory, method_name, model_name,'config.pkl'), 'wb') as f:

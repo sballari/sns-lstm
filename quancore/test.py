@@ -16,19 +16,27 @@ from helper import getCoef, sample_gaussian_2d, get_mean_error, get_final_error
 from helper import *
 from grid import getSequenceGridMask, getGridMask
 
+from yparams import *
+
 
 def main():
     
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('--experiment', type=str)
+    args = parser.parse_args()
+    hparams = YParams(args.experiment)
+    test_data = hparams.testDatasets
+
+
     # Observed length of the trajectory parameter
     parser.add_argument('--obs_length', type=int, default=8,
                         help='Observed length of the trajectory')
-    # Predicted length of the trajectory parameter
+    # Predicted length oval_dunaval_dunaf the trajectory parameter
     parser.add_argument('--pred_length', type=int, default=12,
                         help='Predicted length of the trajectory')
     
-    
-    # Model to be loaded
+
     parser.add_argument('--epoch', type=int, default=14,
                         help='Epoch of model to be loaded')
     # cuda support
@@ -45,7 +53,7 @@ def main():
     parser.add_argument('--gru', action="store_true", default=False,
                         help='True : GRU cell, False: LSTM cell')
     # method selection
-    parser.add_argument('--method', type=int, default=1,
+    parser.add_argument('--method', type=int, default=3,
                         help='Method of lstm will be used (1 = social lstm, 2 = obstacle lstm, 3 = vanilla lstm)')
     
     # Parse the parameters
@@ -53,7 +61,7 @@ def main():
     
     #for drive run
     prefix = ''
-    f_prefix = '.'
+    f_prefix = ''
     if sample_args.drive is True:
       prefix='drive/semester_project/social_lstm_final/'
       f_prefix = 'drive/semester_project/social_lstm_final'
@@ -64,16 +72,16 @@ def main():
       subprocess.call([f_prefix+'/make_directories.sh'])
 
     method_name = get_method_name(sample_args.method)
-    model_name = "LSTM"
-    save_tar_name = method_name+"_lstm_model_"
+    model_name = ""#"LSTM"
+    save_tar_name = "" #method_name+"_lstm_model_"
     if sample_args.gru:
-        model_name = "GRU"
-        save_tar_name = method_name+"_gru_model_"
-
+        model_name = ""#"GRU"
+        save_tar_name ="" # method_name+"_gru_model_"
+    model_name = hparams.name
     print("Selected method name: ", method_name, " model name: ", model_name)
 
     # Save directory
-    save_directory = os.path.join(f_prefix, 'model/', method_name, model_name)
+    save_directory = hparams.modelFolder +"/"+hparams.name
     #plot directory for plotting in the future
     plot_directory = os.path.join(f_prefix, 'plot/', method_name, model_name)
 
@@ -89,7 +97,7 @@ def main():
     seq_lenght = sample_args.pred_length + sample_args.obs_length
 
     # Create the DataLoader object
-    dataloader = DataLoader(f_prefix, 1, seq_lenght, forcePreProcess = True, infer=True)
+    dataloader = DataLoader(f_prefix, 1, seq_lenght, test_data = test_data, num_of_validation=0,forcePreProcess = True, infer=True)
     create_directories(os.path.join(result_directory, model_name), dataloader.get_all_directory_namelist())
     create_directories(plot_directory, [plot_test_file_directory])
     dataloader.reset_batch_pointer()
@@ -199,8 +207,14 @@ def main():
             # ret_x_seq = translate(ret_x_seq, PedsList_seq, lookup_seq ,-target_id_values)
             
             # Record the mean and final displacement error
-            total_error += get_mean_error(ret_x_seq[1:sample_args.obs_length].data, orig_x_seq[1:sample_args.obs_length].data, PedsList_seq[1:sample_args.obs_length], PedsList_seq[1:sample_args.obs_length], sample_args.use_cuda, lookup_seq)
-            final_error += get_final_error(ret_x_seq[1:sample_args.obs_length].data, orig_x_seq[1:sample_args.obs_length].data, PedsList_seq[1:sample_args.obs_length], PedsList_seq[1:sample_args.obs_length], lookup_seq)
+            #CALCOLO ERRORE SOLO SU SEQUENZA OSSERVATA
+            #total_error += get_mean_error(ret_x_seq[1:sample_args.obs_length].data, orig_x_seq[1:sample_args.obs_length].data, PedsList_seq[1:sample_args.obs_length], PedsList_seq[1:sample_args.obs_length], sample_args.use_cuda, lookup_seq)
+            #final_error += get_final_error(ret_x_seq[1:sample_args.obs_length].data, orig_x_seq[1:sample_args.obs_length].data, PedsList_seq[1:sample_args.obs_length], PedsList_seq[1:sample_args.obs_length], lookup_seq)
+
+            total_error += get_mean_error(ret_x_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length].data, orig_x_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length].data, PedsList_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length], PedsList_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length], sample_args.use_cuda, lookup_seq)
+            final_error += get_final_error(ret_x_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length].data, orig_x_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length].data, PedsList_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length], PedsList_seq[sample_args.obs_length:sample_args.obs_length+sample_args.pred_length], lookup_seq)
+
+
 
             
             end = time.time()
@@ -236,14 +250,23 @@ def main():
             smallest_err_iter_num = iteration
             smallest_err = total_error
 
-        print('Iteration:' ,iteration+1,' Total training (observed part) mean error of the model is ', total_error / dataloader.num_batches)
-        print('Iteration:' ,iteration+1,'Total training (observed part) final error of the model is ', final_error / dataloader.num_batches)
+        print('Iteration:' ,iteration+1,' Total training mean error of the model is ', total_error / dataloader.num_batches)
+        print('Iteration:' ,iteration+1,'Total training final error of the model is ', final_error / dataloader.num_batches)
         #print(submission)
 
     print('Smallest error iteration:', smallest_err_iter_num+1)
     dataloader.write_to_file(submission_store[smallest_err_iter_num], result_directory, prefix, model_name)
     dataloader.write_to_plot_file(result_store[smallest_err_iter_num], os.path.join(plot_directory, plot_test_file_directory))
 
+    f_res = open("../results/results.txt","w")
+    f_res.write("********************************")
+    f_res.write('\n'+"exp name = "+str(model_name)+'\n')
+    f_res.write("n_batches = "+str(dataloader.num_batches)+'\n')
+    f_res.write("ADE = "+str(total_error / dataloader.num_batches)+'\n')
+    f_res.write("FDE = "+str(final_error / dataloader.num_batches)+'\n')
+    f_res.write("\n")
+    f_res.close()
+    
 
 def sample(x_seq, Pedlist, args, net, true_x_seq, true_Pedlist, saved_args, dimensions, dataloader, look_up, num_pedlist, is_gru, grid = None):
     '''

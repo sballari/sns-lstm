@@ -10,6 +10,7 @@ import tensorflow as tf
 from beautifultable import BeautifulTable
 
 import utils
+from yparams import YParams
 from logger import setLogger
 from model import SocialModel
 
@@ -34,7 +35,7 @@ def main():
         type=str,
     )
     parser.add_argument(
-        "-f",l
+        "-f",
         "--logFolder",
         help="path to the folder where to save the logs. If None, logs are only printed in stderr",
         metavar="path",
@@ -63,7 +64,7 @@ def main():
 
     for experiment in experiments:
         # Load the parameters
-        hparams = utils.YParams(experiment)
+        hparams = YParams(experiment)
         # Define the logger
         setLogger(hparams, args, PHASE)
 

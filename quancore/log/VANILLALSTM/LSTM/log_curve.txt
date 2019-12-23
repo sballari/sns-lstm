@@ -1,0 +1,5 @@
+Training epoch: 0 loss: -1.3691646031906672
+Training epoch: 1 loss: -2.9292632927252145
+Validation dataset epoch: 1 loss: -3.1535156147820613 mean_err: tensor(0.4167)final_err: tensor(0.6441)
+Training epoch: 2 loss: -3.414920662145902
+Validation dataset epoch: 2 loss: -3.119878630735436 mean_err: tensor(0.4162)final_err: tensor(0.6301)

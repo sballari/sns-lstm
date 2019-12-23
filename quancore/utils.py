@@ -10,7 +10,7 @@ from helper import *
 
 class DataLoader():
 
-    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=True, train_data=None, val_data=None, infer=False, generate = False):
+    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=True, train_data=None, val_data=None, test_data=None, infer=False, generate = False):
         '''
         Initialiser function for the DataLoader class
         params:
@@ -32,10 +32,10 @@ class DataLoader():
             for i in range(len(train_data)):
                 train_data[i] = dataPath+train_data[i]
             base_train_dataset = train_data
+        '''
         else :
             base_train_dataset = [
                     '/data/train/biwi/biwi_hotel.txt'
-                    '''
                     #LISOTTO
                     "/data/biwi/train/biwi_hotel_train.txt",
                     "/data/train/crowds/crowds_zara01_train.txt",
@@ -44,12 +44,19 @@ class DataLoader():
                     "/data/train/crowds/students001_train.txt",
                     "/data/train/crowds/students003_train.txt",
                     "/data/train/crowds/uni_examples_train.txt"
-                    '''
                     ]
+        '''
         if val_data!=None:
             for i in range(len(val_data)):
                 val_data[i] = dataPath+val_data[i]
+        
+        if test_data!=None:
+            for i in range(len(test_data)):
+                test_data[i] = dataPath+test_data[i]
+            base_test_dataset=test_data
 
+
+        '''
         base_test_dataset=  ['/data/test/biwi/biwi_eth.txt', 
                         '/data/test/crowds/crowds_zara01.txt',
                         '/data/test/crowds/uni_examples.txt', 
@@ -58,11 +65,12 @@ class DataLoader():
                           '/data/test/stanford/little_0.txt','/data/test/stanford/little_1.txt','/data/test/stanford/little_2.txt','/data/test/stanford/little_3.txt','/data/test/stanford/nexus_5.txt','/data/test/stanford/nexus_6.txt',
                           '/data/test/stanford/quad_0.txt','/data/test/stanford/quad_1.txt','/data/test/stanford/quad_2.txt','/data/test/stanford/quad_3.txt'
                           ]
+        '''
 
 
 
         # dimensions of each file set
-        self.dataset_dimensions = { 'biwi':[720, 576],
+        self.dataset_dimensions = { 'biwi_eth':[720, 576],
                                     'crowds':[720, 576],
                                     'stanford':[595, 326],
                                     'mot':[768, 576]}
@@ -90,14 +98,14 @@ class DataLoader():
         if generate:
             self.train_dataset = [os.path.join(f_prefix, dataset[1:]) for dataset in base_train_dataset]
 
-        #request of use of validation dataset
-        '''
+        #request of use of validation datasetline
+        
         if num_of_validation>0:
             self.additional_validation = True
         else:
             self.additional_validation = False
-            '''
-        self.additional_validation =True
+
+        #self.additional_validation =True
         
 
         # check validation dataset availibility and clip the reuqested number if it is bigger than available validation dataset
@@ -259,9 +267,13 @@ class DataLoader():
 
                 # if test mode, read test file to pandas dataframe and process
                 else:
-                    column_names = ['frame_num','ped_id','y','x']
-                    df = pd.read_csv(directory, dtype={'frame_num':'int','ped_id':'int' }, delimiter = delimiter,  header=None, names=column_names, converters = {c:lambda x: float('nan') if x == '?' else float(x) for c in ['y','x']})
-                    self.target_ids = np.array(df[df['y'].isnull()].drop_duplicates(subset={'ped_id'}, keep='first', inplace=False)['ped_id'])
+                    df = pd.read_csv(directory, dtype={'frame_num':'int','ped_id':'int' }, delimiter = delimiter,  header=None, names=column_names)
+                    self.target_ids = np.array(df.drop_duplicates(subset={'ped_id'}, keep='first', inplace=False)['ped_id'])
+
+                    # column_names = ['frame_num','ped_id','y','x']
+                    # df = pd.read_csv(directory, dtype={'frame_num':'int','ped_id':'int' }, delimiter = delimiter,  header=None, names=column_names, converters = {c:lambda x: float('nan') if x == '?' else float(x) for c in ['y','x']})
+                    # self.target_ids = np.array(df[df['y'].isnull()].drop_duplicates(subset={'ped_id'}, keep='first', inplace=False)['ped_id'])
+                    
 
             # convert pandas -> numpy array
             data = np.array(df)
@@ -752,6 +764,5 @@ class DataLoader():
 
     def get_dataset_dimension(self, file_name):
         # return dataset dimension using dataset file name
-        print(self.dataset_dimensions)
         return self.dataset_dimensions[file_name]
 

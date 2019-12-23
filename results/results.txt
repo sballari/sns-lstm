@@ -1,0 +1,6 @@
+********************************
+exp name = eth
+n_batches = 44
+ADE = tensor(10.4188)
+FDE = tensor(14.2023)
+
