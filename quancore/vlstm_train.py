@@ -67,7 +67,7 @@ def main():
     parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
                         help='L2 regularization parameter')
 
-    parser.add_argument('--use_cuda', action="store_true", default=False,
+    parser.add_argument('--use_cuda', action="store_true", default=True,
                         help='Use GPU or not')
 
     parser.add_argument('--gru', action="store_true", default=False,
