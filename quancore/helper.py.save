@@ -384,7 +384,8 @@ def translate(x_seq, PedsList_seq, lookup_seq, value):
 def revert_seq(x_seq, PedsList_seq, lookup_seq, first_values_dict):
     # convert velocity array to absolute position array
     absolute_x_seq = x_seq.clone()
-    #absolute_x_seq = absolute_x_seq.cuda()
+    absolute_x_seq = absolute_x_seq.
+cuda()
     for ind, frame in enumerate(x_seq):
         for ped in PedsList_seq[ind]:
             absolute_x_seq[ind, lookup_seq[ped], 0:2] = frame[lookup_seq[ped], 0:2] + first_values_dict[ped][0:2]
@@ -511,11 +512,11 @@ def sample_validation_data_vanilla(x_seq, Pedlist, args, net, look_up, num_pedli
     if args.use_cuda:
         ret_x_seq = ret_x_seq.cuda()
 
-    #print("**************************")
-    #print("x_seq")
-    #print(x_seq)
-    #print("re_x_seq")
-    #print(ret_x_seq)
+    print("**************************")
+    print("x_seq")
+    print(x_seq)
+    print("re_x_seq")
+    print(ret_x_seq)
     #if args.use_cuda:
     #x_seq = x_seq.cuda()
 

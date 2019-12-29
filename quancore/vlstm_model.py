@@ -135,6 +135,10 @@ class VLSTMModel(nn.Module):
 
 
             # Get the corresponding hidden and cell states
+            if self.use_cuda:
+                corr_index = corr_index.cuda()
+
+
             hidden_states_current = torch.index_select(hidden_states, 0, corr_index)
 
             if not self.gru:

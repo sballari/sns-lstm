@@ -2,9 +2,9 @@
 
 experiments={'eth','hotel','univ','zara1','zara2'}
 
-for experiment in {'eth','hotel','univ','zara1','zara2'};
+for experiment in {'hotel','eth'};
 do
-    for i in {1..5};
+    for i in {1,};
     do
         echo 'Training for' $experiment
         echo "Run number " $i
