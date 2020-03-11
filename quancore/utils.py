@@ -73,7 +73,12 @@ class DataLoader():
         self.dataset_dimensions = { 'biwi_eth':[720, 576],
                                     'crowds':[720, 576],
                                     'stanford':[595, 326],
-                                    'mot':[768, 576]}
+                                    'mot':[768, 576],
+                                    'biwi_hotel':[720, 576],
+                                    'students001':[720, 576],
+				    'students003':[720, 576],
+                                    'crowds_zara01':[720, 576],
+                                    'crowds_zara02':[720, 576]}
         
         # List of data directories where raw data resides
         self.base_train_path = '../datasets_lis2quan/train/'

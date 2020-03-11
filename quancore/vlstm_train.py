@@ -14,83 +14,81 @@ from helper import *
 from yparams import *
 
 
-def main(args):
-    if (__name__=="__main__"):
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--experiment', type=str)
+def main():
+	if (__name__ == "__main__"):
+		parser = argparse.ArgumentParser()
+		parser.add_argument('--experiment', type=str)
+		args = parser.parse_args()
+		hparams = YParams(args.experiment)
+
+		# RNN size parameter (dimension of the output/hidden state)
+		parser.add_argument('--input_size', type=int, default=2)
+		parser.add_argument('--output_size', type=int, default=5)
+		# RNN size parameter (dimension of the output/hidden state)
+		parser.add_argument('--rnn_size', type=int, default=hparams.rnnSize,
+				help='size of RNN hidden state')
+		# Size of each batch parameter
+		parser.add_argument('--batch_size', type=int, default=5,
+				help='minibatch size')
+		# Length of sequence to be considered parameter
+		parser.add_argument('--seq_length', type=int, default=hparams.predLen+hparams.obsLen,
+				help='RNN sequence length')
+		parser.add_argument('--pred_length', type=int, default=hparams.predLen,
+				help='prediction length')
+		# Number of epochs parameter
+		parser.add_argument('--num_epochs', type=int, default=hparams.epochs,
+				help='number of epochs')
+		# Frequency at which the model should be saved parameter
+		parser.add_argument('--save_every', type=int, default=400,
+				help='save frequency')
+		# TODO: (resolve) Clipping gradients for now. No idea whether we should
+		# Gradient value at which it should be clipped
+		parser.add_argument('--grad_clip', type=float, default=hparams.clippingRatio,
+				help='clip gradients at this value')
+
+		# Learning rate parameter
+		parser.add_argument('--learning_rate', type=float, default=hparams.learningRate,
+				help='learning rate')
+		# Decay rate for the learning rate parameter
+		parser.add_argument('--decay_rate', type=float, default=hparams.optimizerDecay,
+				help='decay rate for rmsprop')
+		# Dropout not implemented.
+		# Dropout probability parameter
+		parser.add_argument('--dropout', type=float, default=0.0,
+				help='dropout probability')
+		# Dimension of the embeddings parameter
+		parser.add_argument('--embedding_size', type=int, default=hparams.embeddingSize,
+				help='Embedding dimension for the spatial coordinates')
+		# Maximum number of pedestrians to be considered
+		parser.add_argument('--maxNumPeds', type=int, default=hparams.maxNumPed,
+				help='Maximum Number of Pedestrians')
+
+		# Lambda regularization parameter (L2)
+		parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
+				help='L2 regularization parameter')
+
+		parser.add_argument('--use_cuda', action="store_true", default=False,
+				help='Use GPU or not')
+
+		parser.add_argument('--gru', action="store_true", default=False,
+				help='True : GRU cell, False: LSTM cell')
+
+		parser.add_argument('--drive', action="store_true", default=False,
+				help='Use Google drive or not')
+
+		parser.add_argument('--num_validation', type=int, default=1,
+				help='1 if val 0 otherwise')
+
+		parser.add_argument('--freq_validation', type=int, default=1,
+				help='Frequency number(epoch) of validation using validation data')
+		parser.add_argument('--freq_optimizer', type=int, default=8,
+				help='Frequency number(epoch) of learning decay for optimizer')
+
 	args = parser.parse_args()
 	hparams = YParams(args.experiment)
-
-
-    	# RNN size parameter (dimension of the output/hidden state)
-	parser.add_argument('--input_size', type=int, default=2)
-    	parser.add_argument('--output_size', type=int, default=5)
-    	# RNN size parameter (dimension of the output/hidden state)
-    	parser.add_argument('--rnn_size', type=int, default=hparams.rnnSize,
-                        help='size of RNN hidden state')
-    	# Size of each batch parameter
-    	parser.add_argument('--batch_size', type=int, default=5,
-                        help='minibatch size')
-    	# Length of sequence to be considered parameter
-    	parser.add_argument('--seq_length', type=int, default=hparams.predLen+hparams.obsLen,
-                        help='RNN sequence length')
-    	parser.add_argument('--pred_length', type=int, default=hparams.predLen,
-                        help='prediction length')
-    	# Number of epochs parameter
-    	parser.add_argument('--num_epochs', type=int, default=hparams.epochs,
-                        help='number of epochs')
-    	# Frequency at which the model should be saved parameter
-    	parser.add_argument('--save_every', type=int, default=400,
-                        help='save frequency')
-    	# TODO: (resolve) Clipping gradients for now. No idea whether we should
-    	# Gradient value at which it should be clipped
-    	parser.add_argument('--grad_clip', type=float, default=hparams.clippingRatio,
-                        help='clip gradients at this value')
-    	# Learning rate parameter
-    	parser.add_argument('--learning_rate', type=float, default=hparams.learningRate,
-                        help='learning rate')
-    	# Decay rate for the learning rate parameter
-    	parser.add_argument('--decay_rate', type=float, default=hparams.optimizerDecay,
-                        help='decay rate for rmsprop')
-    	# Dropout not implemented.
-    	# Dropout probability parameter
-    	parser.add_argument('--dropout', type=float, default=0.0,
-                        help='dropout probability')
-    	# Dimension of the embeddings parameter
-    	parser.add_argument('--embedding_size', type=int, default=hparams.embeddingSize,
-                        help='Embedding dimension for the spatial coordinates')
-    	# Maximum number of pedestrians to be considered
-    	parser.add_argument('--maxNumPeds', type=int, default=hparams.maxNumPed,
-                        help='Maximum Number of Pedestrians')
-
-    	# Lambda regularization parameter (L2)
-    	parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
-                        help='L2 regularization parameter')
-
-    	parser.add_argument('--use_cuda', action="store_true", default=False,
-                        help='Use GPU or not')
-
-    	parser.add_argument('--gru', action="store_true", default=False,
-                        help='True : GRU cell, False: LSTM cell')
-    
-    	parser.add_argument('--drive', action="store_true", default=False,
-                        help='Use Google drive or not')
-    
-    	parser.add_argument('--num_validation', type=int, default=1,
-                        help='1 if val 0 otherwise')
-    
-
-    	parser.add_argument('--freq_validation', type=int, default=1,
-                        help='Frequency number(epoch) of validation using validation data')
-    	parser.add_argument('--freq_optimizer', type=int, default=8,
-                        help='Frequency number(epoch) of learning decay for optimizer')
-    
-    args = parser.parse_args()
-    hparams = YParams(args.experiment)
-    train_data = hparams.trainDatasets
-    val_data = hparams.validationDatasets
-    train(args, train_data, val_data,hparams)
-
+	train_data = hparams.trainDatasets
+	val_data = hparams.validationDatasets
+	train(args, train_data, val_data,hparams)
 
 def train(args, train_data, val_data,hparams):
     origin = (0,0)
@@ -139,7 +137,7 @@ def train(args, train_data, val_data,hparams):
     log_file = open(os.path.join(log_directory, method_name, model_name, 'val.txt'), 'w+')
 
     # model directory
-    #save_directory = os.path.join(prefix, 'model/')
+    # save_directory = os.path.join(prefix, 'model/')
     save_directory = hparams.modelFolder+ "/" 
     
     # Save the arguments int the config file
@@ -157,7 +155,7 @@ def train(args, train_data, val_data,hparams):
 
     # optimizer = torch.optim.RMSprop(net.parameters(), lr=args.learning_rate)
     optimizer = torch.optim.Adagrad(net.parameters(), weight_decay=args.lambda_param)
-    #optimizer = torch.optim.Adam(net.parameters(), weight_decay=args.lambda_param)
+    # optimizer = torch.optim.Adam(net.parameters(), weight_decay=args.lambda_param)
 
     learning_rate = args.learning_rate
 
@@ -191,21 +189,21 @@ def train(args, train_data, val_data,hparams):
 
             # Get batch data
             x, y, d , numPedsList, PedsList ,target_ids= dataloader.next_batch()
-            #print(len(x))
-            #print(len(x[1]))
+            # print(len(x))
+            # print(len(x[1]))
             loss_batch = 0
 
             # For each sequence
             for sequence in range(dataloader.batch_size):
-                #print("sequence: " + str(sequence))
+                # print("sequence: " + str(sequence))
 
                 # Get the data corresponding to the current sequence
                 x_seq ,_ , d_seq, numPedsList_seq, PedsList_seq = x[sequence], y[sequence], d[sequence], numPedsList[sequence], PedsList[sequence]
                 target_id = target_ids[sequence]
              
-                #get processing file name and then get dimensions of file
+                # get processing file name and then get dimensions of file
                 folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                #dataset_data = dataloader.get_dataset_dimension(folder_name)
+                # dataset_data = dataloader.get_dataset_dimension(folder_name)
                 '''print("len(x_seq)")
                 print(len(x_seq))
                 print("len(x_seq[0][0])")
@@ -213,12 +211,12 @@ def train(args, train_data, val_data,hparams):
 
                 
 
-                #dense vector creation
+                # dense vector creation
                 x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
-                #print("x_seq")
-                #print(x_seq)
-                #print("lookup seq: " + str(lookup_seq))
-                #print("target_id: " + str(target_id))
+                # print("x_seq")
+                # print(x_seq)
+                # print("lookup seq: " + str(lookup_seq))
+                # print("target_id: " + str(target_id))
                 
                 target_id_values = x_seq[0][lookup_seq[target_id], 0:2]
 
@@ -229,7 +227,7 @@ def train(args, train_data, val_data,hparams):
                     x_seq = x_seq.cuda()
 
 
-                #number of peds in this sequence per frame
+                # number of peds in this sequence per frame
                 numNodes = len(lookup_seq)
 
 
@@ -299,16 +297,16 @@ def train(args, train_data, val_data,hparams):
                     x_seq ,_ , d_seq, numPedsList_seq, PedsList_seq = x[sequence], y[sequence], d[sequence], numPedsList[sequence], PedsList[sequence]
                     target_id = target_ids[sequence]
                     
-                    #get processing file name and then get dimensions of file
+                    # get processing file name and then get dimensions of file
                     folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                    #dataset_data = dataloader.get_dataset_dimension(folder_name)
+                    # dataset_data = dataloader.get_dataset_dimension(folder_name)
                     
-                    #dense vector creation
+                    # dense vector creation
                     x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
 
                     target_id_values = x_seq[0][lookup_seq[target_id], 0:2]
                     
-                    #vectorize seq
+                    # vectorize seq
                     x_seq, first_values_dict = vectorize_seq(x_seq, PedsList_seq, lookup_seq)
 
 
@@ -316,7 +314,7 @@ def train(args, train_data, val_data,hparams):
                     if args.use_cuda:                    
                         x_seq = x_seq.cuda()
 
-                    #number of peds in this sequence per frame
+                    # number of peds in this sequence per frame
                     numNodes = len(lookup_seq)
 
                     hidden_states = Variable(torch.zeros(numNodes, args.rnn_size))
@@ -381,9 +379,9 @@ def train(args, train_data, val_data,hparams):
             num_of_batch = 0
             smallest_err = 100000
 
-            #results of one epoch for all validation datasets
+            # results of one epoch for all validation datasets
             epoch_result = []
-            #results of one validation dataset
+            # results of one validation dataset
             results = []
 
 
@@ -416,32 +414,32 @@ def train(args, train_data, val_data,hparams):
                     target_id = target_ids[sequence]
 
                     
-                    #get processing file name and then get dimensions of file
+                    # get processing file name and then get dimensions of file
                     folder_name = dataloader.get_directory_name_with_pointer(d_seq)
-                    #dataset_data = dataloader.get_dataset_dimension(folder_name)
+                    # dataset_data = dataloader.get_dataset_dimension(folder_name)
                     
-                    #dense vector creation
+                    # dense vector creation
                     x_seq, lookup_seq = dataloader.convert_proper_array(x_seq, numPedsList_seq, PedsList_seq)
                     
-                    #will be used for error calculation
+                    # will be used for error calculation
                     orig_x_seq = x_seq.clone() 
                     
                     target_id_values = orig_x_seq[0][lookup_seq[target_id], 0:2]
                                         
-                    #vectorize datapoints
+                    # vectorize datapoints
                     x_seq, first_values_dict = vectorize_seq(x_seq, PedsList_seq, lookup_seq)
 
                     if args.use_cuda:
                         x_seq = x_seq.cuda
 
-                    #if args.use_cuda:
+                    # if args.use_cuda:
                     #     PedsList_seq = PedsList_seq.cuda()
-                    #if args.use_cuda:
+                    # if args.use_cuda:
                     #    lookup_seq = lookup_seq.cuda()
 
                     ret_x_seq, loss = sample_validation_data_vanilla(x_seq, PedsList_seq, args, net, lookup_seq, numPedsList_seq, dataloader)
                     
-                    #revert the points back to original space
+                    # revert the points back to original space
                     ret_x_seq = revert_seq(ret_x_seq, PedsList_seq, lookup_seq, first_values_dict)
 
 
@@ -505,12 +503,12 @@ def train(args, train_data, val_data,hparams):
     if dataloader.additional_validation:
         print('Best epoch acording to validation dataset', best_epoch_val_data, 'Best validation Loss', best_val_data_loss, 'Best error epoch',best_err_epoch_val_data, 'Best error', smallest_err_val_data)
         log_file.write("Validation dataset Best epoch: "+str(best_epoch_val_data)+','+' Best validation Loss: '+str(best_val_data_loss)+'\n')
-        #dataloader.write_to_plot_file(all_epoch_results[best_epoch_val_data], plot_directory)
+        # dataloader.write_to_plot_file(all_epoch_results[best_epoch_val_data], plot_directory)
 
-    #elif dataloader.valid_num_batches != 0:
+    # elif dataloader.valid_num_batches != 0:
     #    dataloader.write_to_plot_file(all_epoch_results[best_epoch_val], plot_directory)
 
-    #else:
+    # else:
     if validation_dataset_executed:
         dataloader.switch_to_dataset_type(load_data=False)
         create_directories(plot_directory, [plot_train_file_directory])

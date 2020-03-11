@@ -1,6 +1,18 @@
 ********************************
 exp name = eth
 n_batches = 44
-ADE = tensor(10.4188)
-FDE = tensor(14.2023)
+ADE = tensor(4.1704)
+FDE = tensor(7.2112)
+
+********************************
+exp name = eth
+n_batches = 44
+ADE = tensor(4.1976)
+FDE = tensor(7.1474)
+
+********************************
+exp name = eth
+n_batches = 44
+ADE = tensor(4.1968)
+FDE = tensor(7.1058)
 
