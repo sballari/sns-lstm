@@ -1,6 +1,6 @@
 ********************************
-exp name = eth
-n_batches = 44
-ADE = tensor(10.4188)
-FDE = tensor(14.2023)
+exp name = hotel
+n_batches = 122
+ADE = tensor(5.5818)
+FDE = tensor(7.6532)
 

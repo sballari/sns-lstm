@@ -14,78 +14,78 @@ from helper import *
 from yparams import *
 
 
-def main(args):
+def main():
     if (__name__=="__main__"):
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--experiment', type=str)
-	args = parser.parse_args()
-	hparams = YParams(args.experiment)
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--experiment', type=str)
+        args = parser.parse_args()
+        hparams = YParams(args.experiment)
 
+        # RNN size parameter (dimension of the output/hidden state)
+        parser.add_argument('--input_size', type=int, default=2)
+        parser.add_argument('--output_size', type=int, default=5)
 
     	# RNN size parameter (dimension of the output/hidden state)
-	parser.add_argument('--input_size', type=int, default=2)
-    	parser.add_argument('--output_size', type=int, default=5)
-    	# RNN size parameter (dimension of the output/hidden state)
-    	parser.add_argument('--rnn_size', type=int, default=hparams.rnnSize,
-                        help='size of RNN hidden state')
+        parser.add_argument('--rnn_size', type=int, default=hparams.rnnSize, help='size of RNN hidden state')
     	# Size of each batch parameter
-    	parser.add_argument('--batch_size', type=int, default=5,
-                        help='minibatch size')
-    	# Length of sequence to be considered parameter
-    	parser.add_argument('--seq_length', type=int, default=hparams.predLen+hparams.obsLen,
-                        help='RNN sequence length')
-    	parser.add_argument('--pred_length', type=int, default=hparams.predLen,
+        parser.add_argument('--batch_size', type=int, default=5, help='minibatch size')
+    	
+        # Length of sequence to be considered parameter
+        parser.add_argument('--seq_length', type=int, default=hparams.predLen+hparams.obsLen,
+                                    help='RNN sequence length')
+        parser.add_argument('--pred_length', type=int, default=hparams.predLen,
                         help='prediction length')
     	# Number of epochs parameter
-    	parser.add_argument('--num_epochs', type=int, default=hparams.epochs,
+        parser.add_argument('--num_epochs', type=int, default=hparams.epochs,
                         help='number of epochs')
     	# Frequency at which the model should be saved parameter
-    	parser.add_argument('--save_every', type=int, default=400,
+        parser.add_argument('--save_every', type=int, default=400,
                         help='save frequency')
     	# TODO: (resolve) Clipping gradients for now. No idea whether we should
     	# Gradient value at which it should be clipped
-    	parser.add_argument('--grad_clip', type=float, default=hparams.clippingRatio,
+        parser.add_argument('--grad_clip', type=float, default=hparams.clippingRatio,
                         help='clip gradients at this value')
     	# Learning rate parameter
-    	parser.add_argument('--learning_rate', type=float, default=hparams.learningRate,
+        parser.add_argument('--learning_rate', type=float, default=hparams.learningRate,
                         help='learning rate')
     	# Decay rate for the learning rate parameter
-    	parser.add_argument('--decay_rate', type=float, default=hparams.optimizerDecay,
+        parser.add_argument('--decay_rate', type=float, default=hparams.optimizerDecay,
                         help='decay rate for rmsprop')
     	# Dropout not implemented.
     	# Dropout probability parameter
-    	parser.add_argument('--dropout', type=float, default=0.0,
+        parser.add_argument('--dropout', type=float, default=0.0,
                         help='dropout probability')
     	# Dimension of the embeddings parameter
-    	parser.add_argument('--embedding_size', type=int, default=hparams.embeddingSize,
+        parser.add_argument('--embedding_size', type=int, default=hparams.embeddingSize,
                         help='Embedding dimension for the spatial coordinates')
     	# Maximum number of pedestrians to be considered
-    	parser.add_argument('--maxNumPeds', type=int, default=hparams.maxNumPed,
+        parser.add_argument('--maxNumPeds', type=int, default=hparams.maxNumPed,
                         help='Maximum Number of Pedestrians')
 
     	# Lambda regularization parameter (L2)
-    	parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
+        parser.add_argument('--lambda_param', type=float, default=hparams.l2Rate,
                         help='L2 regularization parameter')
 
-    	parser.add_argument('--use_cuda', action="store_true", default=False,
+        parser.add_argument('--use_cuda', action="store_true", default=False,
                         help='Use GPU or not')
 
-    	parser.add_argument('--gru', action="store_true", default=False,
+        parser.add_argument('--gru', action="store_true", default=False,
                         help='True : GRU cell, False: LSTM cell')
     
-    	parser.add_argument('--drive', action="store_true", default=False,
+        parser.add_argument('--drive', action="store_true", default=False,
                         help='Use Google drive or not')
     
-    	parser.add_argument('--num_validation', type=int, default=1,
+        parser.add_argument('--num_validation', type=int, default=1,
                         help='1 if val 0 otherwise')
-    
 
-    	parser.add_argument('--freq_validation', type=int, default=1,
+        parser.add_argument('--freq_validation', type=int, default=1,
                         help='Frequency number(epoch) of validation using validation data')
-    	parser.add_argument('--freq_optimizer', type=int, default=8,
+        parser.add_argument('--freq_optimizer', type=int, default=8,
                         help='Frequency number(epoch) of learning decay for optimizer')
-    
-    args = parser.parse_args()
+        
+        args = parser.parse_args()
+
+    #questo non deve essere indentato    
     hparams = YParams(args.experiment)
     train_data = hparams.trainDatasets
     val_data = hparams.validationDatasets

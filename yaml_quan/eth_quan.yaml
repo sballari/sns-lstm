@@ -10,7 +10,7 @@ prefetchSize: 10
 # Shuffle the dataset
 shuffle: True
 # Number of epochs
-epochs: 50
+epochs: 1
 # Use centered option in RMSProp
 centered: true
 # Learning rate

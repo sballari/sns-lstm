@@ -5,7 +5,7 @@ def euc_dist(x1,y1,x2,y2):
     return ((x1-x2)**2 + (y1-y2)**2)**(0.5)
 
 
-coord = np.load("coordinates/ethpkl.npy")
+coord = np.load("coordinates/ethpkl.npy", allow_pickle = True)
 print ("(examples,frame,pedestrians,coordinate)")
 print('GT shape: ' + str(coord['groundTruth'].shape ))
 print('pedsInSequence len: ' + str(len(coord['pedsInSequence'] )))
