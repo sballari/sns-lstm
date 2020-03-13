@@ -1,6 +1,25 @@
 ********************************
+<<<<<<< HEAD
 exp name = hotel
 n_batches = 122
 ADE = tensor(5.5818)
 FDE = tensor(7.6532)
+=======
+exp name = eth
+n_batches = 44
+ADE = tensor(4.1704)
+FDE = tensor(7.2112)
+
+********************************
+exp name = eth
+n_batches = 44
+ADE = tensor(4.1976)
+FDE = tensor(7.1474)
+
+********************************
+exp name = eth
+n_batches = 44
+ADE = tensor(4.1968)
+FDE = tensor(7.1058)
+>>>>>>> fc1fde1edd5fe01d033bc9461d5e2853b07dafa4
 

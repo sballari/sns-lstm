@@ -23,8 +23,31 @@ class DataLoader():
         '''
 
        
+        #print(f_prefix)
 
-        dataPath = "../datasets_lis2quan/"
+        dataPath = "../data_experiments_q/ETH/"
+        base_train_dataset = [
+                'train/crowds_zara01_train/crowds_zara01_train.txt',
+                'train/biwi_hotel_train/biwi_hotel_train.txt',
+                'train/crowds_zara02_train/crowds_zara02_train.txt',
+                'train/crowds_zara03_train/crowds_zara03_train.txt',
+                'train/students001_train/students001_train.txt',
+                'train/students003_train/students003_train.txt',
+                'train/uni_examples_train/uni_examples_train.txt'
+        ]
+
+        base_test_dataset =  ['test/biwi/biwi_eth.txt', 
+                            ]
+
+
+        val_data = ["val/biwi_hotel_val/biwi_hotel_val.txt",
+                    "val/crowds_zara01_val/crowds_zara01_val.txt",
+                    "val/crowds_zara02_val/crowds_zara02_val.txt",
+                    "val/crowds_zara03_val/crowds_zara03_val.txt",
+                    "val/students001_val/students001_val.txt",
+                    "val/students003_val/students003_val.txt",
+                    "val/uni_examples_val/uni_examples_val.txt",
+        ]
 
 
         #base train files
@@ -71,15 +94,32 @@ class DataLoader():
 
         # dimensions of each file set
         self.dataset_dimensions = { 'biwi_eth':[720, 576],
-                                    'crowds':[720, 576],
-                                    'stanford':[595, 326],
-                                    'mot':[768, 576],
-                                    'biwi_hotel':[720, 576]}
-        
+                                    'biwi_hotel':[720, 576],
+                                    'crowds_zara01':[720, 576],
+                                    'crowds_zara02':[720, 576],
+                                    'students001':[595, 326],
+                                    'students003':[595, 326],
+                                    'biwi_eth_train':[768, 576],
+                                    'biwi_hotel_train':[768, 576],
+                                    'crowds_zara01_train':[720, 576],
+                                    'crowds_zara02_train':[720, 576],
+                                    'crowds_zara03_train':[720, 576],
+                                    'students001_train':[595, 326],
+                                    'students003_train':[595, 326],
+                                    'uni_examples_train':[595, 326],
+                                    'biwi_eth_val':[768, 576],
+                                    'biwi_hotel_val':[768, 576],
+                                    'crowds_zara01_val':[720, 576],
+                                    'crowds_zara02_val':[720, 576],
+                                    'crowds_zara03_val':[720, 576],
+                                    'students001_val':[595, 326],
+                                    'students003_val':[595, 326],
+                                    'uni_examples_val':[595, 326]}
+
         # List of data directories where raw data resides
-        self.base_train_path = '../datasets_lis2quan/train/'
-        self.base_test_path = '../datasets_lis2quan/test/'
-        self.base_validation_path = '../datasets_lis2quan/val/'
+        self.base_train_path = '../data_experiments_q/ETH/train/'
+        self.base_test_path = '../data_experiments_q/ETH/test/'
+        self.base_validation_path = '../data_experiments_q/ETH/val/'
 
         # check infer flag, if true choose test directory as base directory
         if infer is False:

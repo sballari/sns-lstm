@@ -258,7 +258,7 @@ def main():
     dataloader.write_to_file(submission_store[smallest_err_iter_num], result_directory, prefix, model_name)
     dataloader.write_to_plot_file(result_store[smallest_err_iter_num], os.path.join(plot_directory, plot_test_file_directory))
 
-    f_res = open("../results/results.txt","w")
+    f_res = open("../results/results.txt","a+")
     f_res.write("********************************")
     f_res.write('\n'+"exp name = "+str(model_name)+'\n')
     f_res.write("n_batches = "+str(dataloader.num_batches)+'\n')
