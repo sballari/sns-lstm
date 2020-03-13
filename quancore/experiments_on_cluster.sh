@@ -2,7 +2,7 @@
 
 experiments={'eth','hotel','univ','zara1','zara2'}
 
-for experiment in {'eth',};
+for experiment in {'hotel','univ','zara1','zara2',};
 do
     for i in {1,2,3};
     do

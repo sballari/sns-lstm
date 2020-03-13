@@ -25,7 +25,8 @@ class DataLoader():
        
 
         dataPath = "../datasets_lis2quan/"
-
+        base_train_dataset = []
+        base_test_dataset = []
 
         #base train files
         if train_data!=None :

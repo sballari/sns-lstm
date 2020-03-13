@@ -1,99 +1,99 @@
-Training epoch: 0 loss: -1.2009070145693836
-Training epoch: 1 loss: -2.978996691609751
-Validation dataset epoch: 1 loss: -2.855910535928394 mean_err: tensor(0.5005)final_err: tensor(0.8726)
-Training epoch: 2 loss: -3.480334652115148
-Validation dataset epoch: 2 loss: -3.1227537459408756 mean_err: tensor(0.4778)final_err: tensor(0.7999)
-Training epoch: 3 loss: -3.774704669927742
-Validation dataset epoch: 3 loss: -3.500006516870796 mean_err: tensor(0.4712)final_err: tensor(0.7729)
-Training epoch: 4 loss: -3.9903507069484374
-Validation dataset epoch: 4 loss: -3.946404677637073 mean_err: tensor(0.4760)final_err: tensor(0.7555)
-Training epoch: 5 loss: -4.161103689656636
-Validation dataset epoch: 5 loss: -3.471966809205408 mean_err: tensor(0.4638)final_err: tensor(0.7371)
-Training epoch: 6 loss: -4.297280727563616
-Validation dataset epoch: 6 loss: -3.5785532190179348 mean_err: tensor(0.4610)final_err: tensor(0.7101)
-Training epoch: 7 loss: -4.404296263253369
-Validation dataset epoch: 7 loss: -3.860144166070588 mean_err: tensor(0.4589)final_err: tensor(0.7034)
-Training epoch: 8 loss: -4.50333627122585
-Validation dataset epoch: 8 loss: -4.214201781396963 mean_err: tensor(0.4649)final_err: tensor(0.7030)
-Training epoch: 9 loss: -5.622684839165934
-Validation dataset epoch: 9 loss: -4.415480040652412 mean_err: tensor(0.4513)final_err: tensor(0.6855)
-Training epoch: 10 loss: -5.816003151029069
-Validation dataset epoch: 10 loss: -4.60561152435079 mean_err: tensor(0.4508)final_err: tensor(0.6727)
-Training epoch: 11 loss: -5.927292286931909
-Validation dataset epoch: 11 loss: -4.740960943698883 mean_err: tensor(0.4491)final_err: tensor(0.6643)
-Training epoch: 12 loss: -6.0097280365005785
-Validation dataset epoch: 12 loss: -4.832775241501477 mean_err: tensor(0.4477)final_err: tensor(0.6632)
-Training epoch: 13 loss: -6.080916577856119
-Validation dataset epoch: 13 loss: -4.884750610711625 mean_err: tensor(0.4468)final_err: tensor(0.6647)
-Training epoch: 14 loss: -6.138526086244627
-Validation dataset epoch: 14 loss: -4.941503110223888 mean_err: tensor(0.4481)final_err: tensor(0.6794)
-Training epoch: 15 loss: -6.186710712230089
-Validation dataset epoch: 15 loss: -4.9953994780170685 mean_err: tensor(0.4457)final_err: tensor(0.6478)
-Training epoch: 16 loss: -6.23190414142386
-Validation dataset epoch: 16 loss: -5.044204099445927 mean_err: tensor(0.4451)final_err: tensor(0.6555)
-Training epoch: 17 loss: -6.373094417614358
-Validation dataset epoch: 17 loss: -5.275577987243934 mean_err: tensor(0.4437)final_err: tensor(0.6608)
-Training epoch: 18 loss: -6.4147014734947785
-Validation dataset epoch: 18 loss: -5.277988599757759 mean_err: tensor(0.4428)final_err: tensor(0.6550)
-Training epoch: 19 loss: -6.441044363868639
-Validation dataset epoch: 19 loss: -5.293129381932775 mean_err: tensor(0.4426)final_err: tensor(0.6490)
-Training epoch: 20 loss: -6.464491857541284
-Validation dataset epoch: 20 loss: -5.311500573584011 mean_err: tensor(0.4422)final_err: tensor(0.6471)
-Training epoch: 21 loss: -6.48587081222751
-Validation dataset epoch: 21 loss: -5.330706672096739 mean_err: tensor(0.4419)final_err: tensor(0.6449)
-Training epoch: 22 loss: -6.505872086543485
-Validation dataset epoch: 22 loss: -5.349289689806043 mean_err: tensor(0.4411)final_err: tensor(0.6327)
-Training epoch: 23 loss: -6.524657735646322
-Validation dataset epoch: 23 loss: -5.367068107334936 mean_err: tensor(0.4413)final_err: tensor(0.6441)
-Training epoch: 24 loss: -6.542389912534264
-Validation dataset epoch: 24 loss: -5.384009038915439 mean_err: tensor(0.4406)final_err: tensor(0.6511)
-Training epoch: 25 loss: -6.507857734939762
-Validation dataset epoch: 25 loss: -5.510606656634077 mean_err: tensor(0.4428)final_err: tensor(0.6567)
-Training epoch: 26 loss: -6.53120749436806
-Validation dataset epoch: 26 loss: -5.516610887038466 mean_err: tensor(0.4418)final_err: tensor(0.6530)
-Training epoch: 27 loss: -6.533862371979476
-Validation dataset epoch: 27 loss: -5.520979737992189 mean_err: tensor(0.4418)final_err: tensor(0.6350)
-Training epoch: 28 loss: -6.535392609085438
-Validation dataset epoch: 28 loss: -5.524636226953293 mean_err: tensor(0.4420)final_err: tensor(0.6487)
-Training epoch: 29 loss: -6.53666785597523
-Validation dataset epoch: 29 loss: -5.527716777732177 mean_err: tensor(0.4415)final_err: tensor(0.6488)
-Training epoch: 30 loss: -6.537815134686843
-Validation dataset epoch: 30 loss: -5.530360901051639 mean_err: tensor(0.4419)final_err: tensor(0.6520)
-Training epoch: 31 loss: -6.5388782935164835
-Validation dataset epoch: 31 loss: -5.53269082444663 mean_err: tensor(0.4420)final_err: tensor(0.6554)
-Training epoch: 32 loss: -6.5398802360223804
-Validation dataset epoch: 32 loss: -5.53477598243222 mean_err: tensor(0.4416)final_err: tensor(0.6340)
-Training epoch: 33 loss: -6.528024524840243
-Validation dataset epoch: 33 loss: -5.540109294987456 mean_err: tensor(0.4431)final_err: tensor(0.6538)
-Training epoch: 34 loss: -6.532472255617102
-Validation dataset epoch: 34 loss: -5.5408638074081775 mean_err: tensor(0.4413)final_err: tensor(0.6470)
-Training epoch: 35 loss: -6.534076055508351
-Validation dataset epoch: 35 loss: -5.5407881331991184 mean_err: tensor(0.4409)final_err: tensor(0.6402)
-Training epoch: 36 loss: -6.534829695313891
-Validation dataset epoch: 36 loss: -5.540584625151693 mean_err: tensor(0.4418)final_err: tensor(0.6459)
-Training epoch: 37 loss: -6.535245595412831
-Validation dataset epoch: 37 loss: -5.540401280716974 mean_err: tensor(0.4416)final_err: tensor(0.6541)
-Training epoch: 38 loss: -6.535504990091946
-Validation dataset epoch: 38 loss: -5.5402623161369435 mean_err: tensor(0.4424)final_err: tensor(0.6542)
-Training epoch: 39 loss: -6.535683878295334
-Validation dataset epoch: 39 loss: -5.5401718940053675 mean_err: tensor(0.4419)final_err: tensor(0.6549)
-Training epoch: 40 loss: -6.53581910611034
-Validation dataset epoch: 40 loss: -5.540118306145377 mean_err: tensor(0.4416)final_err: tensor(0.6468)
-Training epoch: 41 loss: -6.535302499312662
-Validation dataset epoch: 41 loss: -5.54011652582154 mean_err: tensor(0.4412)final_err: tensor(0.6467)
-Training epoch: 42 loss: -6.535312563361963
-Validation dataset epoch: 42 loss: -5.540114938999925 mean_err: tensor(0.4424)final_err: tensor(0.6487)
-Training epoch: 43 loss: -6.535322353452723
-Validation dataset epoch: 43 loss: -5.540113200095236 mean_err: tensor(0.4413)final_err: tensor(0.6347)
-Training epoch: 44 loss: -6.535332121818422
-Validation dataset epoch: 44 loss: -5.540112468813148 mean_err: tensor(0.4416)final_err: tensor(0.6445)
-Training epoch: 45 loss: -6.535341316336223
-Validation dataset epoch: 45 loss: -5.540111053689403 mean_err: tensor(0.4423)final_err: tensor(0.6476)
-Training epoch: 46 loss: -6.535350042595481
-Validation dataset epoch: 46 loss: -5.540109760481483 mean_err: tensor(0.4412)final_err: tensor(0.6444)
-Training epoch: 47 loss: -6.535358834280591
-Validation dataset epoch: 47 loss: -5.54010906657394 mean_err: tensor(0.4409)final_err: tensor(0.6382)
-Training epoch: 48 loss: -6.535367299699899
-Validation dataset epoch: 48 loss: -5.540108391156001 mean_err: tensor(0.4421)final_err: tensor(0.6549)
-Training epoch: 49 loss: -6.535365182829795
-Validation dataset epoch: 49 loss: -5.540108522955252 mean_err: tensor(0.4411)final_err: tensor(0.6450)
+Training epoch: 0 loss: -1.3732211734646944
+Training epoch: 1 loss: -3.4641376043034486
+Validation dataset epoch: 1 loss: -2.74896855980766 mean_err: tensor(0.5344)final_err: tensor(0.9640)
+Training epoch: 2 loss: -4.0634970310413925
+Validation dataset epoch: 2 loss: -3.956034037896564 mean_err: tensor(0.5105)final_err: tensor(0.9268)
+Training epoch: 3 loss: -4.432064810168937
+Validation dataset epoch: 3 loss: -3.547306591515638 mean_err: tensor(0.5066)final_err: tensor(0.8901)
+Training epoch: 4 loss: -4.697717024107402
+Validation dataset epoch: 4 loss: -4.2830453937151 mean_err: tensor(0.5003)final_err: tensor(0.8926)
+Training epoch: 5 loss: -4.921985859249799
+Validation dataset epoch: 5 loss: -3.845284262117073 mean_err: tensor(0.4980)final_err: tensor(0.8525)
+Training epoch: 6 loss: -5.09932314997591
+Validation dataset epoch: 6 loss: -3.6748441280302964 mean_err: tensor(0.4962)final_err: tensor(0.8596)
+Training epoch: 7 loss: -5.231423656763858
+Validation dataset epoch: 7 loss: -4.16665716368933 mean_err: tensor(0.4918)final_err: tensor(0.8745)
+Training epoch: 8 loss: -5.38376061880143
+Validation dataset epoch: 8 loss: -4.453580814721634 mean_err: tensor(0.4843)final_err: tensor(0.8274)
+Training epoch: 9 loss: -6.674182448793793
+Validation dataset epoch: 9 loss: -5.592027070570964 mean_err: tensor(0.4758)final_err: tensor(0.7976)
+Training epoch: 10 loss: -6.923834673879305
+Validation dataset epoch: 10 loss: -5.587584234348366 mean_err: tensor(0.4753)final_err: tensor(0.8031)
+Training epoch: 11 loss: -7.042753262163323
+Validation dataset epoch: 11 loss: -5.7097535066610705 mean_err: tensor(0.4742)final_err: tensor(0.8099)
+Training epoch: 12 loss: -7.13740104654125
+Validation dataset epoch: 12 loss: -5.725781830715739 mean_err: tensor(0.4735)final_err: tensor(0.7820)
+Training epoch: 13 loss: -7.214314150643125
+Validation dataset epoch: 13 loss: -6.057577586386885 mean_err: tensor(0.4740)final_err: tensor(0.8168)
+Training epoch: 14 loss: -7.283273662417852
+Validation dataset epoch: 14 loss: -6.212944274106806 mean_err: tensor(0.4734)final_err: tensor(0.8088)
+Training epoch: 15 loss: -7.3457428109423
+Validation dataset epoch: 15 loss: -6.288071900423694 mean_err: tensor(0.4720)final_err: tensor(0.8013)
+Training epoch: 16 loss: -7.40112249138199
+Validation dataset epoch: 16 loss: -6.343071791772939 mean_err: tensor(0.4686)final_err: tensor(0.7801)
+Training epoch: 17 loss: -7.599029023067968
+Validation dataset epoch: 17 loss: -6.4045862297014295 mean_err: tensor(0.4695)final_err: tensor(0.7926)
+Training epoch: 18 loss: -7.637140810057941
+Validation dataset epoch: 18 loss: -6.405054352721391 mean_err: tensor(0.4689)final_err: tensor(0.8008)
+Training epoch: 19 loss: -7.664828754105023
+Validation dataset epoch: 19 loss: -6.413009167447379 mean_err: tensor(0.4682)final_err: tensor(0.7940)
+Training epoch: 20 loss: -7.688861011943527
+Validation dataset epoch: 20 loss: -6.424450025570637 mean_err: tensor(0.4693)final_err: tensor(0.7913)
+Training epoch: 21 loss: -7.710661044393048
+Validation dataset epoch: 21 loss: -6.437313583858159 mean_err: tensor(0.4671)final_err: tensor(0.7818)
+Training epoch: 22 loss: -7.730791734785681
+Validation dataset epoch: 22 loss: -6.45067799656975 mean_err: tensor(0.4681)final_err: tensor(0.7814)
+Training epoch: 23 loss: -7.7496002618258215
+Validation dataset epoch: 23 loss: -6.464077594602596 mean_err: tensor(0.4688)final_err: tensor(0.8016)
+Training epoch: 24 loss: -7.7673482903671
+Validation dataset epoch: 24 loss: -6.477205959601061 mean_err: tensor(0.4682)final_err: tensor(0.7900)
+Training epoch: 25 loss: -7.751932514270888
+Validation dataset epoch: 25 loss: -6.530274837585739 mean_err: tensor(0.4676)final_err: tensor(0.7882)
+Training epoch: 26 loss: -7.7624564223757435
+Validation dataset epoch: 26 loss: -6.532062353877997 mean_err: tensor(0.4685)final_err: tensor(0.7777)
+Training epoch: 27 loss: -7.764409311965252
+Validation dataset epoch: 27 loss: -6.533675930953147 mean_err: tensor(0.4674)final_err: tensor(0.7848)
+Training epoch: 28 loss: -7.7656650776060925
+Validation dataset epoch: 28 loss: -6.535049534832336 mean_err: tensor(0.4699)final_err: tensor(0.8061)
+Training epoch: 29 loss: -7.766692363770205
+Validation dataset epoch: 29 loss: -6.536250851622651 mean_err: tensor(0.4693)final_err: tensor(0.7826)
+Training epoch: 30 loss: -7.767632056619522
+Validation dataset epoch: 30 loss: -6.537342388076441 mean_err: tensor(0.4689)final_err: tensor(0.7934)
+Training epoch: 31 loss: -7.76853405092364
+Validation dataset epoch: 31 loss: -6.538347945681641 mean_err: tensor(0.4698)final_err: tensor(0.7971)
+Training epoch: 32 loss: -7.769418111638483
+Validation dataset epoch: 32 loss: -6.5392971567809575 mean_err: tensor(0.4704)final_err: tensor(0.8057)
+Training epoch: 33 loss: -7.763500829779098
+Validation dataset epoch: 33 loss: -6.54975963852235 mean_err: tensor(0.4677)final_err: tensor(0.7854)
+Training epoch: 34 loss: -7.76666275680622
+Validation dataset epoch: 34 loss: -6.551615892502726 mean_err: tensor(0.4681)final_err: tensor(0.7684)
+Training epoch: 35 loss: -7.767423317309852
+Validation dataset epoch: 35 loss: -6.5520020638801615 mean_err: tensor(0.4670)final_err: tensor(0.7591)
+Training epoch: 36 loss: -7.767739033531922
+Validation dataset epoch: 36 loss: -6.552094663527548 mean_err: tensor(0.4714)final_err: tensor(0.8169)
+Training epoch: 37 loss: -7.767924763443314
+Validation dataset epoch: 37 loss: -6.552119244148536 mean_err: tensor(0.4688)final_err: tensor(0.7828)
+Training epoch: 38 loss: -7.768058159752429
+Validation dataset epoch: 38 loss: -6.552125841804911 mean_err: tensor(0.4711)final_err: tensor(0.7989)
+Training epoch: 39 loss: -7.768163857616
+Validation dataset epoch: 39 loss: -6.552131962776183 mean_err: tensor(0.4682)final_err: tensor(0.7716)
+Training epoch: 40 loss: -7.7682534010053805
+Validation dataset epoch: 40 loss: -6.552145336781229 mean_err: tensor(0.4690)final_err: tensor(0.7902)
+Training epoch: 41 loss: -7.767849583102162
+Validation dataset epoch: 41 loss: -6.552146722589221 mean_err: tensor(0.4700)final_err: tensor(0.7952)
+Training epoch: 42 loss: -7.767852047614963
+Validation dataset epoch: 42 loss: -6.552148042740869 mean_err: tensor(0.4691)final_err: tensor(0.7812)
+Training epoch: 43 loss: -7.7678542369436965
+Validation dataset epoch: 43 loss: -6.552149179577827 mean_err: tensor(0.4680)final_err: tensor(0.7779)
+Training epoch: 44 loss: -7.76785721143829
+Validation dataset epoch: 44 loss: -6.552150489906875 mean_err: tensor(0.4695)final_err: tensor(0.7894)
+Training epoch: 45 loss: -7.767859282337614
+Validation dataset epoch: 45 loss: -6.552152085699599 mean_err: tensor(0.4676)final_err: tensor(0.7737)
+Training epoch: 46 loss: -7.767861981258214
+Validation dataset epoch: 46 loss: -6.5521534202658405 mean_err: tensor(0.4679)final_err: tensor(0.7759)
+Training epoch: 47 loss: -7.767864006089271
+Validation dataset epoch: 47 loss: -6.552155216737671 mean_err: tensor(0.4685)final_err: tensor(0.7842)
+Training epoch: 48 loss: -7.767866095594156
+Validation dataset epoch: 48 loss: -6.552156790452345 mean_err: tensor(0.4715)final_err: tensor(0.8075)
+Training epoch: 49 loss: -7.767866357687478
+Validation dataset epoch: 49 loss: -6.552156735956666 mean_err: tensor(0.4701)final_err: tensor(0.7915)
