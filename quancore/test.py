@@ -53,7 +53,7 @@ def main():
     parser.add_argument('--gru', action="store_true", default=False,
                         help='True : GRU cell, False: LSTM cell')
     # method selection
-    parser.add_argument('--method', type=int, default=3,
+    parser.add_argument('--method', type=int, default=1,
                         help='Method of lstm will be used (1 = social lstm, 2 = obstacle lstm, 3 = vanilla lstm)')
     
     # Parse the parameters

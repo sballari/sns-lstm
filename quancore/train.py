@@ -19,6 +19,8 @@ def main():
     if (__name__=="__main__"):
         parser = argparse.ArgumentParser()
         parser.add_argument('--experiment', type=str)
+        parser.add_argument('--grid', action="store_true",  default=True,
+                        help='Whether store grids and use further epoch')
         args = parser.parse_args()
         hparams = YParams(args.experiment)
 
@@ -90,9 +92,6 @@ def main():
         parser.add_argument('--freq_optimizer', type=int, default=8,
                         help='Frequency number(epoch) of learning decay for optimizer')
        
-        # store grids in epoch 0 and use further.2 times faster -> Intensive memory use around 12 GB
-        parser.add_argument('--grid', action="store_true", default=False,
-                        help='Whether store grids and use further epoch')    
         args = parser.parse_args()
 
     #questo non deve essere indentato    
