@@ -97,7 +97,7 @@ def main():
     seq_lenght = sample_args.pred_length + sample_args.obs_length
 
     # Create the DataLoader object
-    dataloader = DataLoader(f_prefix, 1, seq_lenght, test_data = test_data, num_of_validation=0,forcePreProcess = True, infer=True)
+    dataloader = DataLoader(f_prefix, 1, seq_lenght, test_data = test_data, num_of_validation=0,forcePreProcess = True, infer=True, dataPath = hparams.dataPath)
     create_directories(os.path.join(result_directory, model_name), dataloader.get_all_directory_namelist())
     create_directories(plot_directory, [plot_test_file_directory])
     dataloader.reset_batch_pointer()

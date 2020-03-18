@@ -1,4 +1,1 @@
-<<<<<<< HEAD
-=======
-Validation dataset Best epoch: 48, Best validation Loss: -6.552156790452345
->>>>>>> fc1fde1edd5fe01d033bc9461d5e2853b07dafa4
+Validation dataset Best epoch: 48, Best validation Loss: -7.0210318573883574

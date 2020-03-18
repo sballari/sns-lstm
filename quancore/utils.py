@@ -10,7 +10,7 @@ from helper import *
 
 class DataLoader():
 
-    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=True, train_data=None, val_data=None, test_data=None, infer=False, generate = False):
+    def __init__(self,f_prefix, batch_size=5, seq_length=20, num_of_validation = 0, forcePreProcess=True, train_data=None, val_data=None, test_data=None, infer=False, generate = False, dataPath = ""):
         '''
         Initialiser function for the DataLoader class
         params:
@@ -25,7 +25,7 @@ class DataLoader():
        
         #print(f_prefix)
 
-        dataPath = "../data_experiments_q/ETH/"
+        #dataPath = "../datasets_lis2quan/"
         base_train_dataset = [
                 'train/crowds_zara01_train/crowds_zara01_train.txt',
                 'train/biwi_hotel_train/biwi_hotel_train.txt',
@@ -117,9 +117,9 @@ class DataLoader():
                                     'uni_examples_val':[595, 326]}
 
         # List of data directories where raw data resides
-        self.base_train_path = '../data_experiments_q/ETH/train/'
-        self.base_test_path = '../data_experiments_q/ETH/test/'
-        self.base_validation_path = '../data_experiments_q/ETH/val/'
+        self.base_train_path = dataPath+'/train/'
+        self.base_test_path = dataPath+'/test/'
+        self.base_validation_path = dataPath+'/val/'
 
         # check infer flag, if true choose test directory as base directory
         if infer is False:

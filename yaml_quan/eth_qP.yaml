@@ -31,7 +31,7 @@ l2Rate: 0.0005
 # -----------------------------------------------------------------------------
 
 # Folder of the datasets
-dataPath: "../datasets"
+dataPath: "../datasets_lis2quan"
 # Name of the training files in the dataPath
 trainDatasets:
   - "train/crowds_zara01_train/crowds_zara01_train.txt"
