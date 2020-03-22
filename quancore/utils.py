@@ -117,9 +117,9 @@ class DataLoader():
                                     'uni_examples_val':[595, 326]}
 
         # List of data directories where raw data resides
-        self.base_train_path = dataPath+'/train/'
-        self.base_test_path = dataPath+'/test/'
-        self.base_validation_path = dataPath+'/val/'
+        self.base_train_path = dataPath+'train/'
+        self.base_test_path = dataPath+'test/'
+        self.base_validation_path = dataPath+'val/'
 
         # check infer flag, if true choose test directory as base directory
         if infer is False:

@@ -1,0 +1,21 @@
+********************************EXPERIMENT DATI QUANCORE ORIGINALI
+
+exp name = LSTM
+n_batches = 6541
+ADE = tensor(4.7474)
+FDE = tensor(6.3703)
+
+********************************EXPERIMENT DATI QUANCORE ORIGINALI
+
+exp name = LSTM
+n_batches = 6541
+ADE = tensor(4.7243)
+FDE = tensor(6.3463)
+
+********************************EXPERIMENT DATI QUANCORE ORIGINALI
+
+exp name = LSTM
+n_batches = 6541
+ADE = tensor(4.6767)
+FDE = tensor(6.3059)
+

@@ -125,7 +125,7 @@ def train(args, train_data, val_data,hparams):
 
     # Create the data loader object. This object would preprocess the data in terms of
     # batches each of size args.batch_size, of length args.seq_length
-    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, args.num_validation, forcePreProcess=True, train_data=train_data, val_data=val_data)
+    dataloader = DataLoader(f_prefix, args.batch_size, args.seq_length, args.num_validation, forcePreProcess=True, train_data=train_data, val_data=val_data, dataPath=hparams.dataPath)
 
     method_name = "" #"socialstm"
     model_name = hparams.name
